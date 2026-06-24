@@ -24,20 +24,33 @@ export default function Builder() {
     offset: ["start end", "end start"],
   });
 
-  // Soft perspective rotation & translation for the header
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [30, 0, -20]);
-  const yText = useTransform(scrollYProgress, [0, 0.5, 1], [60, 0, -30]);
-
-  // Parallax translation for the photo
-  const yPhoto = useTransform(scrollYProgress, [0, 0.5, 1], [40, 0, -40]);
+  // Z-depth parallax scroll translations
+  const yBg = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const yPhoto = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [25, 0, -15]);
+  const yText = useTransform(scrollYProgress, [0, 0.5, 1], [40, 0, -20]);
 
   return (
     <section
       ref={ref}
       id="builder"
       className="relative w-full overflow-hidden px-6 py-24 md:py-36"
-      style={{ background: "#0E0D0B" }}
+      style={{ background: "transparent" }}
     >
+      {/* Background Parallax Grid Schematic (Z-Layer 1: Slow Parallax) */}
+      <motion.div 
+        style={{ y: yBg, opacity: 0.04 }}
+        className="absolute -right-20 -top-20 w-[600px] h-[600px] pointer-events-none hidden lg:block"
+      >
+        <svg viewBox="0 0 100 100" fill="none" className="w-full h-full stroke-[#E8792E] stroke-[0.4] [stroke-dasharray:3_3]">
+          <circle cx="50" cy="50" r="45" />
+          <circle cx="50" cy="50" r="25" />
+          <line x1="0" y1="50" x2="100" y2="50" />
+          <line x1="50" y1="0" x2="50" y2="100" />
+          <line x1="15" y1="15" x2="85" y2="85" />
+        </svg>
+      </motion.div>
+
       <div className="mx-auto max-w-6xl">
         <p
           className="font-mono text-xs uppercase tracking-[0.2em] mb-12 md:mb-16"

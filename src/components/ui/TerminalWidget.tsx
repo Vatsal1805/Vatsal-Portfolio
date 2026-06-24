@@ -7,10 +7,11 @@ type LogEntry = {
   type: "input" | "output" | "error";
 };
 
-const COMMAND_LIST = ["help", "about", "skills", "projects", "contact", "download-resume", "clear", "exit"];
+const COMMAND_LIST = ["help", "about", "skills", "projects", "contact", "download-resume", "theme", "hack", "secret", "clear", "exit"];
 
 export default function TerminalWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [accentColor, setAccentColor] = useState("#E8792E");
   const [history, setHistory] = useState<LogEntry[]>([
     { text: "Vatsal OS v1.0.0 (Warm Terminal)", type: "output" },
     { text: "Type 'help' to see available commands.", type: "output" },
@@ -43,7 +44,10 @@ export default function TerminalWidget() {
     const trimmed = cmdText.trim();
     if (!trimmed) return;
 
-    const cmd = trimmed.toLowerCase();
+    const parts = trimmed.split(/\s+/);
+    const mainCmd = parts[0].toLowerCase();
+    const arg = parts.slice(1).join(" ").toLowerCase();
+
     const newEntry: LogEntry = { text: `vatsal@portfolio:~$ ${trimmed}`, type: "input" };
     let outputs: LogEntry[] = [];
 
@@ -52,7 +56,17 @@ export default function TerminalWidget() {
     setCmdHistory(updatedHistory);
     setHistoryIndex(-1);
 
-    switch (cmd) {
+    if (mainCmd === "sudo") {
+      outputs = [
+        { text: "Permission denied. vatsal is the ultimate superuser on this system.", type: "error" },
+        { text: "This incident has been reported to the system administrator.", type: "output" }
+      ];
+      setHistory((prev) => [...prev, newEntry, ...outputs]);
+      setInputVal("");
+      return;
+    }
+
+    switch (mainCmd) {
       case "help":
         outputs = [
           { text: "Available commands:", type: "output" },
@@ -61,6 +75,9 @@ export default function TerminalWidget() {
           { text: "  projects         - Built & shipped applications", type: "output" },
           { text: "  contact          - Channels to reach out", type: "output" },
           { text: "  download-resume  - Trigger PDF download", type: "output" },
+          { text: "  theme <color>    - Swap accents (orange, green, blue)", type: "output" },
+          { text: "  hack             - Execute matrix bypass sequence", type: "output" },
+          { text: "  secret           - Decrypt hidden case study", type: "output" },
           { text: "  clear            - Wipe output history", type: "output" },
           { text: "  exit             - Close terminal window", type: "output" },
         ];
@@ -87,7 +104,7 @@ export default function TerminalWidget() {
           { text: "   AI-driven dashboard with image/PDF OCR parsing & sentiment vectors.", type: "output" },
           { text: "2. HomeEase Marketplace (React, Node, Express, MongoDB, JWT)", type: "output" },
           { text: "   Multi-role on-demand booking flows with secure permission guards.", type: "output" },
-          { text: "3. Zomato-Reel Platform (React, Node, Multer, ImageKit.io)", type: "output" },
+          { text: "3. Zomato-Reel Video Platform (React, Node, Multer, ImageKit.io)", type: "output" },
           { text: "   Media ingestion pipeline resolving device-specific buffering delays.", type: "output" },
         ];
         break;
@@ -100,10 +117,58 @@ export default function TerminalWidget() {
         break;
       case "download-resume":
         outputs = [{ text: "Initializing resume PDF retrieval...", type: "output" }];
-        // Trigger download of a mock/actual resume file
         setTimeout(() => {
           window.open("https://github.com/Vatsal1805", "_blank");
         }, 800);
+        break;
+      case "theme":
+        if (arg === "green" || arg === "cyberpunk") {
+          setAccentColor("#10B981");
+          document.documentElement.style.setProperty("--color-accent-orange", "#10B981");
+          outputs = [{ text: "Theme changed to Cyberpunk Green.", type: "output" }];
+        } else if (arg === "blue" || arg === "cobalt") {
+          setAccentColor("#3B82F6");
+          document.documentElement.style.setProperty("--color-accent-orange", "#3B82F6");
+          outputs = [{ text: "Theme changed to Cobalt Blue.", type: "output" }];
+        } else if (arg === "orange" || arg === "amber") {
+          setAccentColor("#E8792E");
+          document.documentElement.style.setProperty("--color-accent-orange", "#E8792E");
+          outputs = [{ text: "Theme changed to Amber Orange.", type: "output" }];
+        } else {
+          outputs = [
+            { text: "Available themes: orange, green, blue.", type: "output" },
+            { text: "Usage: theme <color>", type: "output" },
+          ];
+        }
+        break;
+      case "hack":
+        outputs = [{ text: "Initializing matrix bypass sequence...", type: "output" }];
+        const hackSteps = [
+          "Establishing proxy nodes [OK]",
+          "Bypassing security firewall [OK]",
+          "Injecting custom WASM payload [OK]",
+          "01001000 01000011 01000011 01001011 01000101 01000100",
+          "SYSTEM COMPROMISED. Welcome to vatsal@root.",
+          "Type 'secret' to read the hidden files."
+        ];
+        hackSteps.forEach((step, idx) => {
+          setTimeout(() => {
+            setHistory((prev) => [...prev, { text: step, type: idx === 3 ? "error" : "output" }]);
+          }, (idx + 1) * 350);
+        });
+        break;
+      case "secret":
+        outputs = [
+          { text: "🔐 ACCESSING VAULT ARCHIVE...", type: "output" },
+          { text: "PROJECT CODENAME: XENON", type: "output" },
+          { text: "PURPOSE: Decentralized Peer-to-Peer Audio Synchronization", type: "output" },
+          { text: "TECH STACK: Rust, WebRTC, WASM, React, Web Audio API", type: "output" },
+          { text: "DESCRIPTION:", type: "output" },
+          { text: "  Developed a custom WebRTC synchronization engine ensuring", type: "output" },
+          { text: "  sub-5ms delay between audio streams playing across up to", type: "output" },
+          { text: "  32 nodes concurrently. Written in Rust, compiled to WASM.", type: "output" },
+          { text: "STATUS: Shipped (Private Repository)", type: "output" },
+        ];
         break;
       case "clear":
         setHistory([]);
@@ -148,6 +213,13 @@ export default function TerminalWidget() {
     }
   };
 
+  const shadowColor =
+    accentColor === "#E8792E"
+      ? "rgba(232,121,46,0.3)"
+      : accentColor === "#10B981"
+      ? "rgba(16,185,129,0.3)"
+      : "rgba(59,130,246,0.3)";
+
   return (
     <>
       {/* Floating Action Button */}
@@ -156,15 +228,15 @@ export default function TerminalWidget() {
         className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer select-none"
         style={{
           background: "#171512",
-          borderColor: isOpen ? "#E8792E" : "#2A241D",
+          borderColor: isOpen ? accentColor : "#2A241D",
           boxShadow: isOpen
-            ? "0 0 20px rgba(232,121,46,0.3)"
+            ? `0 0 20px ${shadowColor}`
             : "0 10px 30px rgba(0,0,0,0.6)",
         }}
         aria-label="Toggle CLI terminal"
       >
         {isOpen ? (
-          <X className="h-5 w-5" style={{ color: "#E8792E" }} />
+          <X className="h-5 w-5" style={{ color: accentColor }} />
         ) : (
           <Terminal className="h-5 w-5" style={{ color: "#F4EDE3" }} />
         )}
@@ -215,6 +287,8 @@ export default function TerminalWidget() {
                       ? "#F4EDE3"
                       : h.type === "error"
                       ? "#ea580c"
+                      : h.text.includes("SYSTEM COMPROMISED") || h.text.includes("Theme changed")
+                      ? accentColor
                       : "#A79C8E",
                 }}
               >
@@ -229,8 +303,8 @@ export default function TerminalWidget() {
             className="flex items-center border-t px-4 py-2 gap-1"
             style={{ background: "#171512", borderColor: "#2A241D" }}
           >
-            <ChevronRight className="h-4.5 w-4.5" style={{ color: "#E8792E" }} />
-            <span style={{ color: "#E8792E" }} className="mr-1">
+            <ChevronRight className="h-4.5 w-4.5" style={{ color: accentColor }} />
+            <span style={{ color: accentColor }} className="mr-1">
               $
             </span>
             <input
@@ -239,7 +313,8 @@ export default function TerminalWidget() {
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent text-[#F4EDE3] focus:outline-none caret-[#E8792E]"
+              className="flex-1 bg-transparent text-[#F4EDE3] focus:outline-none"
+              style={{ caretColor: accentColor }}
               placeholder="type commands..."
               autoComplete="off"
               autoCapitalize="off"

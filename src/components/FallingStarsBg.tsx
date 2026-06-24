@@ -40,7 +40,15 @@ export default function FallingStarsBg({
       ctx.fillRect(0, 0, w, h);
       const cx = w / 2;
       const cy = h / 2;
-      const mult = speedRef.current;
+      
+      let mult = speedRef.current;
+      if (speedRef.current > 1) {
+        speedRef.current -= (speedRef.current - 1) * 0.06;
+        if (speedRef.current < 1) {
+          speedRef.current = 1;
+        }
+        mult = speedRef.current;
+      }
       for (const s of stars) {
         s.pz = s.z;
         s.z -= s.speed * mult * 4;

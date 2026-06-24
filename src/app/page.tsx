@@ -12,6 +12,7 @@ import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import CustomCursor from "@/components/CustomCursor";
 import TerminalWidget from "@/components/ui/TerminalWidget";
+import FallingStarsBg from "@/components/FallingStarsBg";
 
 export default function Home() {
   const [showPreloader, setShowPreloader] = useState(true);
@@ -35,6 +36,12 @@ export default function Home() {
       requestAnimationFrame(slow);
 
       const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+      lenis.on("scroll", (e: any) => {
+        const val = 1 + Math.min(12, Math.abs(e.velocity) * 1.5);
+        if (val > speedRef.current) {
+          speedRef.current = val;
+        }
+      });
       const raf = (time: number) => {
         lenis.raf(time);
         requestAnimationFrame(raf);
@@ -46,10 +53,13 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full" style={{ background: "#0E0D0B" }}>
+    <main className="relative w-full overflow-hidden" style={{ background: "#0E0D0B" }}>
       <AnimatePresence mode="wait">
         {showPreloader && <Preloader />}
       </AnimatePresence>
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <FallingStarsBg speedRef={speedRef} color="#E8792E" count={120} />
+      </div>
       <CustomCursor />
       <Navbar />
       <Hero ready={ready} speedRef={speedRef} />
