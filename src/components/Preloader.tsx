@@ -88,7 +88,28 @@ export default function Preloader() {
       style={{ background: "#0E0D0B" }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
-      <div className="absolute inset-0 flex items-end justify-center pb-16">
+      
+      {/* Centered VB Monogram */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+        <motion.div
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{
+            opacity: { duration: 0.8, ease: "easeOut" },
+            scale: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+          }}
+          className="font-display font-bold select-none tracking-[0.15em] uppercase text-center"
+          style={{
+            fontSize: "clamp(80px, 15vw, 140px)",
+            color: "#E8792E",
+          }}
+        >
+          VB
+        </motion.div>
+      </div>
+
+      <div className="absolute inset-0 flex items-end justify-center pb-16 z-10">
         <motion.span
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 1.6, repeat: Infinity }}

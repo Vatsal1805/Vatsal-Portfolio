@@ -65,19 +65,33 @@ export default function FallingStarsBg({
         const r = Math.max(0.4, (1 - s.z / w) * 2.2);
         ctx.strokeStyle = color;
         ctx.lineWidth = r;
-        ctx.globalAlpha = 0.9;
+        ctx.globalAlpha = 0.8;
         ctx.beginPath();
         ctx.moveTo(px, py);
         ctx.lineTo(sx, sy);
         ctx.stroke();
-        ctx.globalAlpha = 0.25;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = color;
+
+        // High-performance nested vector glow (replaces expensive shadowBlur)
+        // Outer soft glow halo
+        ctx.globalAlpha = 0.12;
         ctx.beginPath();
-        ctx.arc(sx, sy, r * 1.5, 0, Math.PI * 2);
+        ctx.arc(sx, sy, r * 4, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
-        ctx.shadowBlur = 0;
+
+        // Inner glowing core
+        ctx.globalAlpha = 0.35;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r * 2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Intense center core (white center creates realistic star heat/intensity)
+        ctx.globalAlpha = 0.95;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fill();
       }
       ctx.globalAlpha = 1;
       raf = requestAnimationFrame(render);

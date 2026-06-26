@@ -3,19 +3,81 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import vatsalPhoto from "@/assets/vatsal.jpg";
+import { stack } from "../data/portfolioData";
 
-const stack = [
-  "React.js",
-  "Node.js",
-  "Express.js",
-  "MongoDB",
-  "JWT",
-  "Tailwind CSS",
-  "Gemini AI",
-  "LangChain",
-  "Python",
-  "REST APIs",
-];
+const bioText = "Final-year Computer Science Engineering student at Parul University. I specialize in building, deploying, and optimizing robust full-stack applications. Completed a production-focused internship at PTN Events, delivering clean code and user dashboard architecture in fast-paced sprint cycles. Currently mapping out a structured learning trajectory toward AI Engineering.";
+const bioWords = bioText.split(" ");
+
+const containerVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const titleLineVariants = {
+  hidden: { y: "100%", opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
+  },
+};
+
+const paragraphVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.02,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const wordVariants = {
+  hidden: { opacity: 0, y: 3 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.35,
+      ease: "easeOut" as const,
+    },
+  },
+};
+
+const stackContainerVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.09,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const tagVariants = {
+  hidden: { opacity: 0, scale: 0.85, y: 8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 70,
+      damping: 15,
+    },
+  },
+};
 
 export default function Builder() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -25,10 +87,10 @@ export default function Builder() {
   });
 
   // Z-depth parallax scroll translations
-  const yBg = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const yPhoto = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const yBg = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const yPhoto = useTransform(scrollYProgress, [0, 1], [0, -80]);
   const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [25, 0, -15]);
-  const yText = useTransform(scrollYProgress, [0, 0.5, 1], [40, 0, -20]);
+  const yText = useTransform(scrollYProgress, [0, 1], [0, -20]);
 
   return (
     <section
@@ -37,9 +99,11 @@ export default function Builder() {
       className="relative w-full overflow-hidden px-6 py-24 md:py-36"
       style={{ background: "transparent" }}
     >
-      {/* Background Parallax Grid Schematic (Z-Layer 1: Slow Parallax) */}
+      {/* Background Parallax Grid Schematic (Z-Layer 1: Slow Parallax + Ambient Spin) */}
       <motion.div 
         style={{ y: yBg, opacity: 0.04 }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 80, ease: "linear", repeat: Infinity }}
         className="absolute -right-20 -top-20 w-[600px] h-[600px] pointer-events-none hidden lg:block"
       >
         <svg viewBox="0 0 100 100" fill="none" className="w-full h-full stroke-[#E8792E] stroke-[0.4] [stroke-dasharray:3_3]">
@@ -106,51 +170,77 @@ export default function Builder() {
           </div>
 
           {/* Right Column: Narrative & Stack */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
+          <motion.div
+            style={{ y: yText }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={containerVariants}
+            className="lg:col-span-7 flex flex-col justify-center"
+          >
             <div style={{ perspective: "600px" }} className="w-full">
               <motion.div
-                style={{ rotateX, y: yText, transformStyle: "preserve-3d" }}
+                style={{ rotateX, transformStyle: "preserve-3d" }}
                 className="font-display font-bold leading-[0.95] text-left"
               >
-                <div style={{ fontSize: "clamp(38px, 6vw, 80px)", color: "#F4EDE3" }}>
-                  FULL-STACK
+                <div className="overflow-hidden py-1">
+                  <motion.div
+                    variants={titleLineVariants}
+                    style={{ fontSize: "clamp(38px, 6vw, 80px)", color: "#F4EDE3" }}
+                  >
+                    FULL-STACK
+                  </motion.div>
                 </div>
-                <div style={{ fontSize: "clamp(38px, 6vw, 80px)", color: "#E8792E" }}>
-                  ENGINEER
+                <div className="overflow-hidden py-1">
+                  <motion.div
+                    variants={titleLineVariants}
+                    style={{ fontSize: "clamp(38px, 6vw, 80px)", color: "#E8792E" }}
+                  >
+                    ENGINEER
+                  </motion.div>
                 </div>
-                <div
-                  style={{ color: "#A79C8E" }}
-                  className="font-mono text-sm sm:text-base md:text-lg mt-3 uppercase tracking-widest"
-                >
-                  MERN · GenAI · Systems
+                <div className="overflow-hidden py-1">
+                  <motion.div
+                    variants={titleLineVariants}
+                    style={{ color: "#A79C8E" }}
+                    className="font-mono text-sm sm:text-base md:text-lg mt-3 uppercase tracking-widest"
+                  >
+                    MERN · GenAI · Systems
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
+              variants={paragraphVariants}
               className="mt-8 text-base md:text-lg leading-relaxed text-[#A79C8E] text-left"
             >
-              Final-year Computer Science Engineering student at Parul University. I specialize in building, deploying, and optimizing robust full-stack applications. Completed a production-focused internship at PTN Events, delivering clean code and user dashboard architecture in fast-paced sprint cycles. Currently mapping out a structured learning trajectory toward AI Engineering.
+              {bioWords.map((word, idx) => (
+                <motion.span
+                  key={idx}
+                  variants={wordVariants}
+                  className="inline-block mr-[0.25em]"
+                >
+                  {word}
+                </motion.span>
+              ))}
             </motion.p>
 
             <div className="mt-10">
-              <p className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-4">
+              <motion.p
+                variants={titleLineVariants}
+                className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-4"
+              >
                 Core Toolkit
-              </p>
+              </motion.p>
               <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                variants={stackContainerVariants}
                 className="flex flex-wrap gap-2.5"
               >
                 {stack.map((s) => (
-                  <span
+                  <motion.span
                     key={s}
+                    variants={tagVariants}
                     className="cursor-default rounded-full border px-4 py-1.5 font-mono text-[11px] transition-all duration-200 select-none"
                     style={{
                       background: "#171512",
@@ -171,11 +261,11 @@ export default function Builder() {
                     }}
                   >
                     {s}
-                  </span>
+                  </motion.span>
                 ))}
               </motion.div>
             </div>
-          </div>
+          </motion.div>
           
         </div>
       </div>

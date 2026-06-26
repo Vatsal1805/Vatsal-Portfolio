@@ -1,143 +1,175 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Terminal, FileCode, Folder, FolderOpen } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Terminal } from "lucide-react";
 
-interface FileItem {
-  id: string;
-  name: string;
-  category: string;
-  jsonContent: string;
-}
+type SkillCategory = "frontend" | "backend" | "devops" | "learning";
 
-const files: FileItem[] = [
-  {
-    id: "languages",
-    name: "languages.json",
-    category: "stack",
-    jsonContent: `{
-  "category": "Programming Languages",
-  "environments": {
-    "JavaScript (ES6+)": "V8 Engine / Web Host",
-    "C++":               "GCC compiler",
-    "Python":            "CPython runtime",
-    "SQL":               "Structured Queries"
-  },
-  "proficiency": {
-    "JavaScript": "[██████████░░] 85%",
-    "SQL":        "[████████░░░░] 70%",
-    "Python":     "[████████░░░░] 65%",
-    "C++":        "[████████░░░░] 65%"
-  }
-}`,
-  },
-  {
+const SKILLS_DATA = {
+  frontend: {
     id: "frontend",
     name: "frontend.json",
-    category: "stack",
-    jsonContent: `{
-  "category": "Frontend Libraries",
-  "frameworks": ["React.js", "Tailwind CSS v4", "HTML5", "CSS3", "Material UI"],
-  "bundlers":   ["Vite", "Next.js Turbopack"],
-  "integrations": {
-    "Framer Motion": "[██████████░░] 85%",
-    "Lenis Scroll":  "[████████████] 100%"
-  }
-}`,
+    content: `{
+  "category": "Frontend Engineering",
+  "frameworks": [
+    "React.js",
+    "Next.js",
+    "Tailwind CSS v4",
+    "HTML5 / CSS3",
+    "Material UI"
+  ],
+  "tooling": [
+    "Vite",
+    "Turbopack"
+  ],
+  "animations": [
+    "Framer Motion",
+    "Lenis Scroll"
+  ]
+}
+
+`
   },
-  {
+  backend: {
     id: "backend",
     name: "backend.json",
-    category: "stack",
-    jsonContent: `{
-  "category": "Backend Engineering",
-  "technologies": ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Multer"],
-  "architecture": "MVC / Serverless Gateway",
-  "security": {
-    "JWT Gating": "[██████████░░] 85%",
-    "Middleware": "[████████████] 100%"
+    content: `{
+  "category": "Backend & Database Systems",
+  "technologies": [
+    "Node.js",
+    "Express.js",
+    "REST APIs",
+    "JWT Authentication",
+    "Multer Ingestion"
+  ],
+  "databases": [
+    "MongoDB",
+    "MongoDB Atlas",
+    "MySQL",
+    "Mongoose ORM",
+    "ImageKit CDN"
+  ],
+  "architecture": "MVC / Serverless Gateway"
+}
+
+`
+  },
+  devops: {
+    id: "devops",
+    name: "devops.json",
+    content: `{
+  "category": "DevOps & Tooling",
+  "ecosystem": [
+    "Git",
+    "GitHub",
+    "Vercel",
+    "Postman",
+    "VS Code"
+  ],
+  "workflows": "CI/CD & Git Flow versioning",
+  "deployments": "Vercel Edge & CDN routing"
+}
+
+`
+  },
+  learning: {
+    id: "learning",
+    name: "learning.json",
+    content: `{
+  "category": "Foundations & AI Roadmap",
+  "languages": [
+    "JavaScript (ES6+)",
+    "SQL",
+    "Python",
+    "C++"
+  ],
+  "ai_toolkit": [
+    "LangChain",
+    "Google Gemini API",
+    "RAG Pipelines",
+    "LangGraph",
+    "crewAI Multi-Agent",
+    "QLoRA Fine-Tuning"
+  ],
+  "status": "Active AI Engineering Learning Path"
+}
+
+`
   }
-}`,
-  },
-  {
-    id: "database",
-    name: "database.json",
-    category: "stack",
-    jsonContent: `{
-  "category": "Database & Storage",
-  "systems": ["MongoDB", "MongoDB Atlas", "MySQL", "ImageKit CDN"],
-  "querying": {
-    "Mongoose":    "[██████████░░] 80%",
-    "Aggregations": "[████████░░░░] 70%"
-  }
-}`,
-  },
-  {
-    id: "tools",
-    name: "devops_tools.json",
-    category: "stack",
-    jsonContent: `{
-  "category": "Tools & Deployments",
-  "ecosystem": ["Git", "GitHub", "Vercel", "Postman", "VS Code"],
-  "versioning": "Distributed Git Version Control",
-  "deployment": {
-    "Vercel Edge": "[████████████] 100%",
-    "Git Workflows": "[██████████░░] 85%"
-  }
-}`,
-  },
-  {
-    id: "ai-learning",
-    name: "ai_learning.json",
-    category: "roadmap",
-    jsonContent: `{
-  "roadmap": "AI Engineering Path",
-  "toolkit": ["Python", "LangChain", "Google Gemini API", "RAG Pipelines", "LangGraph", "Google ADK", "QLoRA", "crewAI"],
-  "milestones": {
-    "Structured LLM prompts": "Completed",
-    "Multi-Agent (crewAI)":  "Completed",
-    "RAG Vector Pipelines":   "Completed",
-    "QLoRA fine-tuning":      "In Progress"
-  },
-  "status": "Active Learning trajectory"
-}`,
-  },
-];
+};
 
 export default function Skills() {
-  const [selectedFile, setSelectedFile] = useState<FileItem>(files[0]);
-  const [displayedText, setDisplayedText] = useState("");
-  const [isStackOpen, setIsStackOpen] = useState(true);
-  const [isRoadmapOpen, setIsRoadmapOpen] = useState(true);
+  const [selectedId, setSelectedId] = useState<SkillCategory>("frontend");
+  const [typedLength, setTypedLength] = useState(0);
+  const [blink, setBlink] = useState(true);
+  const rightPanelRef = useRef<HTMLDivElement | null>(null);
+  const isFirstRender = useRef(true);
 
-  // Snappy custom typewriter effect that runs when selectedFile changes
+  const selectedContent = SKILLS_DATA[selectedId].content;
+
+  // Typewriter effect (18ms per character)
   useEffect(() => {
-    let active = true;
-    setDisplayedText("");
-    const textToPrint = selectedFile.jsonContent;
-    let index = 0;
-    const charsPerStep = 4; // print 4 characters at a time for snappiness
+    setTypedLength(0);
+    const interval = setInterval(() => {
+      setTypedLength((prev) => {
+        if (prev >= selectedContent.length) {
+          clearInterval(interval);
+          return selectedContent.length;
+        }
+        return prev + 1;
+      });
+    }, 18);
+    return () => clearInterval(interval);
+  }, [selectedId, selectedContent]);
 
-    const timer = setInterval(() => {
-      if (!active) return;
-      index += charsPerStep;
-      if (index >= textToPrint.length) {
-        setDisplayedText(textToPrint);
-        clearInterval(timer);
-      } else {
-        setDisplayedText(textToPrint.slice(0, index));
-      }
-    }, 8);
+  // Smooth scroll to top of right panel on file switch (skipped on mount)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (rightPanelRef.current) {
+      rightPanelRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [selectedId]);
 
-    return () => {
-      active = false;
-      clearInterval(timer);
-    };
-  }, [selectedFile]);
+  // Cursor blink at 500ms interval
+  useEffect(() => {
+    const t = setInterval(() => setBlink((b) => !b), 500);
+    return () => clearInterval(t);
+  }, []);
+
+  const displayedText = selectedContent.slice(0, typedLength);
+  const lines = displayedText.split("\n");
+
+  const renderLineWithColor = (line: string) => {
+    // Check if this line is a telemetry bar line, e.g., containing [████████░░░░]
+    const match = line.match(/^(\s*\[)([█░]+)(\].*)$/);
+    if (match) {
+      const [, before, blocks, after] = match;
+      return (
+        <>
+          <span className="text-[#A79C8E]">{before}</span>
+          {Array.from(blocks).map((char, i) => {
+            if (char === "█") {
+              return <span key={i} className="text-[#E8792E]">█</span>;
+            } else {
+              return <span key={i} className="text-[#2A241D]">░</span>;
+            }
+          })}
+          <span className="text-[#F4EDE3]">{after}</span>
+        </>
+      );
+    }
+    
+    if (line.startsWith("--")) {
+      return <span className="text-[#A79C8E] font-semibold">{line}</span>;
+    }
+    
+    return <span className="text-[#F4EDE3]">{line}</span>;
+  };
 
   return (
     <section id="skills" className="relative w-full px-6 py-32" style={{ background: "transparent" }}>
-      
       {/* Background warmth glow */}
       <div 
         className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none z-0 rounded-full opacity-[0.03] filter blur-[150px]"
@@ -147,88 +179,44 @@ export default function Skills() {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4 text-left" style={{ color: "#A79C8E" }}>
-          CH.04 — THE SIGNAL
+        <p className="font-mono text-xs uppercase tracking-[0.2em] mb-12 text-left" style={{ color: "#A79C8E" }}>
+          CH.04 // SYSTEM INVENTORY
         </p>
 
-        <h2 className="font-display text-4xl md:text-5xl font-bold leading-[1.0] text-[#F4EDE3] text-left mb-12">
-          SYSTEM<br />
-          <span style={{ color: "#E8792E" }}>INVENTORY.</span>
-        </h2>
-
-        {/* Compiler Panel Console Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch border border-[#2A241D] rounded-xl overflow-hidden bg-[#171512]/20 backdrop-blur-sm">
+        {/* 35% / 65% Dual Panel Layout */}
+        <div className="flex flex-col lg:flex-row border border-[#2A241D] rounded-xl overflow-hidden bg-[#171512] min-h-[500px]">
           
-          {/* Left Panel: File Tree Explorer */}
-          <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-[#2A241D] p-5 flex flex-col justify-start text-left bg-[#171512]/10 select-none">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#5C5147] mb-6 block">
-              Explorer // System Stack
-            </span>
-
-            {/* Folder 1: Stack Config */}
-            <div className="mb-4">
-              <button 
-                onClick={() => setIsStackOpen(!isStackOpen)}
-                className="flex items-center gap-2 font-mono text-xs text-[#F4EDE3] hover:text-[#E8792E] transition-colors cursor-pointer w-full"
-              >
-                {isStackOpen ? <FolderOpen size={14} className="text-[#E8792E]" /> : <Folder size={14} className="text-[#A79C8E]" />}
-                <span>stack_config</span>
-              </button>
-
-              {isStackOpen && (
-                <div className="pl-4 mt-2 space-y-1.5 border-l border-[#2A241D]/60 ml-1.5">
-                  {files
-                    .filter((f) => f.category === "stack")
-                    .map((file) => (
-                      <button
-                        key={file.id}
-                        onClick={() => setSelectedFile(file)}
-                        className={`flex items-center gap-2 font-mono text-xs cursor-pointer w-full text-left py-0.5 rounded px-2 transition-colors ${
-                          selectedFile.id === file.id
-                            ? "bg-[#E8792E]/10 text-[#E8792E]"
-                            : "text-[#A79C8E] hover:text-[#F4EDE3]"
-                        }`}
-                      >
-                        <FileCode size={13} />
-                        <span>{file.name}</span>
-                      </button>
-                    ))}
-                </div>
-              )}
+          {/* Left Panel: File Tree (35%) */}
+          <div 
+            className="w-full lg:w-[35%] p-6 flex flex-col justify-start text-left bg-[#171512] select-none border-b lg:border-b-0 lg:border-r border-[#2A241D]"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            <div className="text-xs text-[#A79C8E] mb-6 tracking-wider font-semibold">
+              stack/
             </div>
-
-            {/* Folder 2: Roadmap */}
-            <div>
-              <button 
-                onClick={() => setIsRoadmapOpen(!isRoadmapOpen)}
-                className="flex items-center gap-2 font-mono text-xs text-[#F4EDE3] hover:text-[#E8792E] transition-colors cursor-pointer w-full"
-              >
-                {isRoadmapOpen ? <FolderOpen size={14} className="text-[#E8792E]" /> : <Folder size={14} className="text-[#A79C8E]" />}
-                <span>learning_roadmap</span>
-              </button>
-
-              {isRoadmapOpen && (
-                <div className="pl-4 mt-2 space-y-1.5 border-l border-[#2A241D]/60 ml-1.5">
-                  {files
-                    .filter((f) => f.category === "roadmap")
-                    .map((file) => (
-                      <button
-                        key={file.id}
-                        onClick={() => setSelectedFile(file)}
-                        className={`flex items-center gap-2 font-mono text-xs cursor-pointer w-full text-left py-0.5 rounded px-2 transition-colors ${
-                          selectedFile.id === file.id
-                            ? "bg-[#E8792E]/10 text-[#E8792E]"
-                            : "text-[#A79C8E] hover:text-[#F4EDE3]"
-                        }`}
-                      >
-                        <FileCode size={13} />
-                        <span>{file.name}</span>
-                      </button>
-                    ))}
-                </div>
-              )}
+            
+            <div className="space-y-3">
+              {(Object.keys(SKILLS_DATA) as SkillCategory[]).map((key) => {
+                const file = SKILLS_DATA[key];
+                const isActive = selectedId === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedId(key)}
+                    className={`flex items-center gap-2 font-mono text-sm cursor-pointer w-full text-left py-1.5 px-3 transition-all border-l-2 ${
+                      isActive
+                        ? "border-[#E8792E] text-[#E8792E] bg-[#E8792E]/5"
+                        : "border-transparent text-[#F4EDE3] hover:text-[#E8792E]"
+                    }`}
+                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    <span>▸</span>
+                    <span>{file.name}</span>
+                  </button>
+                );
+              })}
             </div>
-
+            
             <div className="mt-auto pt-8 border-t border-[#2A241D]/30 hidden lg:block">
               <p className="font-mono text-[9px] text-[#5C5147] leading-relaxed">
                 Click on the json files to compile and inspect the core proficiencies and active roadmap of the developer.
@@ -236,9 +224,12 @@ export default function Skills() {
             </div>
           </div>
 
-          {/* Right Panel: Compiler Output Console */}
-          <div className="lg:col-span-8 p-5 flex flex-col justify-start text-left bg-[#0E0D0B]/40 font-mono">
-            
+          {/* Right Panel: Output Console (65%) */}
+          <div 
+            ref={rightPanelRef}
+            className="w-full lg:w-[65%] p-6 flex flex-col justify-start text-left bg-[#171512] font-mono border-t lg:border-t-0"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
             {/* Header Telemetry bar */}
             <div className="flex items-center justify-between border-b border-[#2A241D]/55 pb-3 mb-4 select-none">
               <div className="flex items-center gap-2 text-xs text-[#A79C8E]">
@@ -252,13 +243,17 @@ export default function Skills() {
 
             {/* Simulated Command prompt line */}
             <div className="text-xs text-[#A79C8E] mb-2 select-none">
-              <span className="text-[#E8792E]">visitor@vatsal-portfolio:~$</span> cat {selectedFile.category === "stack" ? "stack_config" : "learning_roadmap"}/{selectedFile.name}
+              $ cat stack/{SKILLS_DATA[selectedId].name}
             </div>
 
             {/* Compiled JSON output console */}
-            <pre className="text-[11px] sm:text-xs text-[#F4EDE3] whitespace-pre-wrap font-mono leading-relaxed bg-[#0E0D0B]/20 p-4 rounded border border-[#2A241D]/35 flex-1 min-h-[280px]">
-              {displayedText}
-              <span className="animate-pulse duration-700 text-[#E8792E]">█</span>
+            <pre className="text-[11px] sm:text-xs text-[#F4EDE3] whitespace-pre-wrap font-mono leading-relaxed bg-[#0E0D0B]/40 p-4 rounded border border-[#2A241D]/35 flex-1 min-h-[320px] overflow-x-auto">
+              {lines.map((line, i) => (
+                <div key={i} className="min-h-[1.2rem]">
+                  {renderLineWithColor(line)}
+                </div>
+              ))}
+              {blink ? <span className="text-[#E8792E]">█</span> : <span className="opacity-0">█</span>}
             </pre>
           </div>
 

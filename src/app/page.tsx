@@ -53,7 +53,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full overflow-hidden" style={{ background: "#0E0D0B" }}>
+    <main className="relative w-full overflow-x-clip" style={{ background: "#0E0D0B" }}>
       <AnimatePresence mode="wait">
         {showPreloader && <Preloader />}
       </AnimatePresence>
