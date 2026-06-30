@@ -16,9 +16,10 @@ interface InlineInputProps {
   placeholder: string;
   type?: string;
   required?: boolean;
+  hasError?: boolean;
 }
 
-function InlineInput({ name, value, onChange, placeholder, type = "text", required = true }: InlineInputProps) {
+function InlineInput({ name, value, onChange, placeholder, type = "text", required = true, hasError = false }: InlineInputProps) {
   const [width, setWidth] = useState(120);
   const [isFocused, setIsFocused] = useState(false);
   const spanRef = useRef<HTMLSpanElement>(null);
@@ -29,6 +30,9 @@ function InlineInput({ name, value, onChange, placeholder, type = "text", requir
       setWidth(Math.max(measuredWidth + 16, 120));
     }
   }, [value, placeholder]);
+
+  const activeColor = hasError ? "#ef4444" : "#E8792E";
+  const baseLineColor = hasError ? "rgba(239, 68, 68, 0.4)" : "rgba(232, 121, 46, 0.4)";
 
   return (
     <span className="relative inline-block mx-1 md:mx-2 align-baseline">
@@ -56,15 +60,22 @@ function InlineInput({ name, value, onChange, placeholder, type = "text", requir
         style={{ 
           width: `${width}px`,
           fontSize: "clamp(24px, 4vw, 48px)",
-          fontFamily: "var(--font-display), sans-serif"
+          fontFamily: "var(--font-display), sans-serif",
+          color: activeColor
         }}
-        className="bg-transparent text-[#E8792E] outline-none font-display py-0.5 px-1 placeholder-[#A79C8E]/40 border-none text-center"
+        className={`bg-transparent outline-none font-display py-0.5 px-1 border-none text-center ${
+          hasError ? "placeholder-red-500/40" : "placeholder-[#A79C8E]/40"
+        }`}
       />
       {/* Bottom border line */}
-      <span className="absolute bottom-1 left-0 w-full h-[1px] bg-[#E8792E]/40" />
+      <span 
+        className="absolute bottom-1 left-0 w-full h-[1px] transition-colors duration-300" 
+        style={{ backgroundColor: baseLineColor }}
+      />
       {/* Expanding bottom border line on focus */}
       <motion.span
-        className="absolute bottom-1 left-0 w-full h-[1.5px] bg-[#E8792E] origin-center"
+        className="absolute bottom-1 left-0 w-full h-[1.5px] origin-center"
+        style={{ backgroundColor: activeColor }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: isFocused ? 1 : 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -81,13 +92,23 @@ export default function Contact() {
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [showErrors, setShowErrors] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.company || !formData.message) return;
+    if (!formData.name || !formData.email || !formData.company || !formData.message) {
+      setShowErrors(true);
+      return;
+    }
+    setShowErrors(false);
+    setIsPending(true);
     
-    // Smooth transition fade out of the sentence
-    setStatus("success");
+    // Simulate transmission delay (1200ms) for high-end component feedback
+    setTimeout(() => {
+      setIsPending(false);
+      setStatus("success");
+    }, 1200);
   };
 
   return (
@@ -131,6 +152,7 @@ export default function Contact() {
                     value={formData.name}
                     onChange={(val) => setFormData(prev => ({ ...prev, name: val }))}
                     placeholder="your name"
+                    hasError={showErrors && !formData.name}
                   />
                   and I represent 
                   <InlineInput
@@ -138,6 +160,7 @@ export default function Contact() {
                     value={formData.company}
                     onChange={(val) => setFormData(prev => ({ ...prev, company: val }))}
                     placeholder="your company"
+                    hasError={showErrors && !formData.company}
                   />
                   . You can reach me at 
                   <InlineInput
@@ -146,6 +169,7 @@ export default function Contact() {
                     onChange={(val) => setFormData(prev => ({ ...prev, email: val }))}
                     placeholder="your email address"
                     type="email"
+                    hasError={showErrors && !formData.email}
                   />
                   to discuss 
                   <InlineInput
@@ -153,6 +177,7 @@ export default function Contact() {
                     value={formData.message}
                     onChange={(val) => setFormData(prev => ({ ...prev, message: val }))}
                     placeholder="a project or opportunity"
+                    hasError={showErrors && !formData.message}
                   />
                   .
                 </div>
@@ -161,10 +186,11 @@ export default function Contact() {
                 <div className="mt-16 flex justify-center">
                   <button
                     type="submit"
-                    className="px-8 py-3.5 border border-[#E8792E] bg-transparent text-[#E8792E] hover:bg-[#E8792E] hover:text-[#0E0D0B] transition-colors duration-300 rounded-md font-mono text-sm tracking-wider uppercase cursor-pointer select-none active:scale-95"
+                    disabled={isPending}
+                    className="px-8 py-3.5 border border-[#E8792E] bg-transparent text-[#E8792E] hover:bg-[#E8792E] hover:text-[#0E0D0B] transition-colors duration-300 rounded-md font-mono text-sm tracking-wider uppercase cursor-pointer select-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   >
-                    [ TRANSMIT_ ]
+                    {isPending ? "[ TRANSMITTING... ]" : "[ TRANSMIT_ ]"}
                   </button>
                 </div>
               </motion.form>

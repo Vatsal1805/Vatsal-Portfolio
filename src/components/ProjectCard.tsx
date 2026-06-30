@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Github, FileText } from "lucide-react";
 import type { MouseEvent } from "react";
@@ -28,6 +28,27 @@ export default function ProjectCard({ p }: { p: Project }) {
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 200, damping: 20 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 200, damping: 20 });
+
+  useEffect(() => {
+    // Check if device supports gyro and is touch-enabled
+    if (typeof window === "undefined" || !window.matchMedia("(pointer: coarse)").matches) return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+      // Normal holding tilt is roughly 45 deg pitch (beta) and 0 deg roll (gamma)
+      const pitch = Math.min(Math.max(e.beta - 45, -30), 30) / 30; // -1 to 1
+      const roll = Math.min(Math.max(e.gamma, -30), 30) / 30;    // -1 to 1
+
+      // Set motion values directly for card tilt
+      x.set(roll * 0.35);
+      y.set(pitch * 0.35);
+    };
+
+    window.addEventListener("deviceorientation", handleOrientation);
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation);
+    };
+  }, [x, y]);
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();

@@ -27,6 +27,23 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
     return () => clearInterval(id);
   }, [ready]);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia("(pointer: coarse)").matches) return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+      const pitch = Math.min(Math.max(e.beta - 45, -30), 30) / 30;
+      const roll = Math.min(Math.max(e.gamma, -30), 30) / 30;
+
+      // Update Hero tilt values
+      mouseX.set(roll * 0.3);
+      mouseY.set(pitch * 0.3);
+    };
+
+    window.addEventListener("deviceorientation", handleOrientation);
+    return () => window.removeEventListener("deviceorientation", handleOrientation);
+  }, [mouseX, mouseY]);
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();

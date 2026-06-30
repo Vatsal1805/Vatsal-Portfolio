@@ -148,24 +148,24 @@ export default function Skills() {
       const [, before, blocks, after] = match;
       return (
         <>
-          <span className="text-[#A79C8E]">{before}</span>
+          <span className="text-text-muted">{before}</span>
           {Array.from(blocks).map((char, i) => {
             if (char === "█") {
-              return <span key={i} className="text-[#E8792E]">█</span>;
+              return <span key={i} className="text-accent-orange">█</span>;
             } else {
-              return <span key={i} className="text-[#2A241D]">░</span>;
+              return <span key={i} className="text-border-line">░</span>;
             }
           })}
-          <span className="text-[#F4EDE3]">{after}</span>
+          <span className="text-text-primary">{after}</span>
         </>
       );
     }
     
     if (line.startsWith("--")) {
-      return <span className="text-[#A79C8E] font-semibold">{line}</span>;
+      return <span className="text-text-muted font-semibold">{line}</span>;
     }
     
-    return <span className="text-[#F4EDE3]">{line}</span>;
+    return <span className="text-text-primary">{line}</span>;
   };
 
   return (
@@ -174,24 +174,24 @@ export default function Skills() {
       <div 
         className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none z-0 rounded-full opacity-[0.03] filter blur-[150px]"
         style={{
-          background: "radial-gradient(circle, #E8792E 20%, transparent 80%)",
+          background: "radial-gradient(circle, var(--color-accent-orange) 20%, transparent 80%)",
         }}
       />
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] mb-12 text-left" style={{ color: "#A79C8E" }}>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] mb-12 text-left" style={{ color: "var(--color-text-muted)" }}>
           CH.04 // SYSTEM INVENTORY
         </p>
 
-        {/* 35% / 65% Dual Panel Layout */}
-        <div className="flex flex-col lg:flex-row border border-[#2A241D] rounded-xl overflow-hidden bg-[#171512] min-h-[500px]">
+        {/* Dual Panel Layout */}
+        <div className="flex flex-col lg:flex-row border border-border-line rounded-xl overflow-hidden bg-bg-surface min-h-[500px]">
           
-          {/* Left Panel: File Tree (35%) */}
+          {/* Left Panel: File Tree (35% - Hidden on mobile, shown on desktop) */}
           <div 
-            className="w-full lg:w-[35%] p-6 flex flex-col justify-start text-left bg-[#171512] select-none border-b lg:border-b-0 lg:border-r border-[#2A241D]"
+            className="hidden lg:flex lg:w-[35%] p-6 flex-col justify-start text-left bg-bg-surface select-none border-r border-border-line"
             style={{ fontFamily: "'JetBrains Mono', monospace" }}
           >
-            <div className="text-xs text-[#A79C8E] mb-6 tracking-wider font-semibold">
+            <div className="text-xs text-text-muted mb-6 tracking-wider font-semibold">
               stack/
             </div>
             
@@ -203,10 +203,10 @@ export default function Skills() {
                   <button
                     key={key}
                     onClick={() => setSelectedId(key)}
-                    className={`flex items-center gap-2 font-mono text-sm cursor-pointer w-full text-left py-1.5 px-3 transition-all border-l-2 ${
+                    className={`flex items-center gap-2 font-mono text-sm cursor-pointer w-full text-left py-1.5 px-3 transition-all border-l-2 focus-visible:ring-1 focus-visible:ring-accent-orange/50 outline-none rounded active:scale-[0.98] ${
                       isActive
-                        ? "border-[#E8792E] text-[#E8792E] bg-[#E8792E]/5"
-                        : "border-transparent text-[#F4EDE3] hover:text-[#E8792E]"
+                        ? "border-accent-orange text-accent-orange bg-accent-orange/5"
+                        : "border-transparent text-text-primary hover:text-accent-orange"
                     }`}
                     style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   >
@@ -217,43 +217,68 @@ export default function Skills() {
               })}
             </div>
             
-            <div className="mt-auto pt-8 border-t border-[#2A241D]/30 hidden lg:block">
-              <p className="font-mono text-[9px] text-[#5C5147] leading-relaxed">
+            <div className="mt-auto pt-8 border-t border-border-line/30">
+              <p className="font-mono text-[9px] text-text-faint leading-relaxed">
                 Click on the json files to compile and inspect the core proficiencies and active roadmap of the developer.
               </p>
             </div>
           </div>
 
-          {/* Right Panel: Output Console (65%) */}
+          {/* Right Panel: Output Console (65% on desktop, full-width on mobile) */}
           <div 
             ref={rightPanelRef}
-            className="w-full lg:w-[65%] p-6 flex flex-col justify-start text-left bg-[#171512] font-mono border-t lg:border-t-0"
+            className="w-full lg:w-[65%] p-6 flex flex-col justify-start text-left bg-bg-surface font-mono"
             style={{ fontFamily: "'JetBrains Mono', monospace" }}
           >
             {/* Header Telemetry bar */}
-            <div className="flex items-center justify-between border-b border-[#2A241D]/55 pb-3 mb-4 select-none">
-              <div className="flex items-center gap-2 text-xs text-[#A79C8E]">
-                <Terminal size={14} className="text-[#E8792E]" />
-                <span>bash // compiler_view</span>
+            <div className="flex items-center justify-between border-b border-border-line/55 pb-3 mb-4 select-none gap-4">
+              <div className="flex items-center gap-2 text-xs text-text-muted">
+                <Terminal size={14} className="text-accent-orange" />
+                <span>
+                  bash <span className="hidden sm:inline">// compiler_view</span>
+                </span>
               </div>
-              <span className="text-[9px] text-[#5C5147] uppercase tracking-widest">
+              <span className="text-[9px] text-text-faint uppercase tracking-widest shrink-0">
                 Status: Compiled OK
               </span>
             </div>
 
+            {/* Mobile 2x2 grid tab bar (visible below lg screen size - no horizontal scroll) */}
+            <div className="grid grid-cols-2 lg:hidden gap-2 border-b border-border-line/30 pb-3 mb-4 select-none">
+              {(Object.keys(SKILLS_DATA) as SkillCategory[]).map((key) => {
+                const file = SKILLS_DATA[key];
+                const isActive = selectedId === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedId(key)}
+                    className={`flex items-center justify-center gap-1.5 font-mono text-xs cursor-pointer py-2 px-3 border transition-all shrink-0 rounded active:scale-95 ${
+                      isActive
+                        ? "border-accent-orange text-accent-orange bg-accent-orange/5 font-semibold"
+                        : "border-border-line/40 text-text-muted hover:text-accent-orange"
+                    }`}
+                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    <span>▸</span>
+                    <span>{file.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Simulated Command prompt line */}
-            <div className="text-xs text-[#A79C8E] mb-2 select-none">
+            <div className="text-xs text-text-muted mb-2 select-none">
               $ cat stack/{SKILLS_DATA[selectedId].name}
             </div>
 
             {/* Compiled JSON output console */}
-            <pre className="text-[11px] sm:text-xs text-[#F4EDE3] whitespace-pre-wrap font-mono leading-relaxed bg-[#0E0D0B]/40 p-4 rounded border border-[#2A241D]/35 flex-1 min-h-[320px] overflow-x-auto">
+            <pre className="text-[11px] sm:text-xs text-text-primary whitespace-pre-wrap font-mono leading-relaxed bg-bg-base/40 p-4 rounded border border-border-line/35 flex-1 min-h-[320px] overflow-x-auto">
               {lines.map((line, i) => (
                 <div key={i} className="min-h-[1.2rem]">
                   {renderLineWithColor(line)}
                 </div>
               ))}
-              {blink ? <span className="text-[#E8792E]">█</span> : <span className="opacity-0">█</span>}
+              {blink ? <span className="text-accent-orange">█</span> : <span className="opacity-0">█</span>}
             </pre>
           </div>
 

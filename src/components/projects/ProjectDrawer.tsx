@@ -161,8 +161,12 @@ export default function ProjectDrawer({ p, isOpen, onClose }: ProjectDrawerProps
         <Drawer.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />
         <Drawer.Content className="fixed inset-0 z-50 flex h-full w-full flex-col bg-[#0E0D0B] text-[#F4EDE3] focus:outline-none">
           
-          {/* Scrollable Container */}
-          <div className="flex-1 overflow-y-auto px-6 pb-12 pt-12 md:px-12 md:pt-16">
+          {/* Scrollable Container - added data-vaul-no-drag to prevent Vaul from hijacking touch scroll on mobile */}
+          <div 
+            data-vaul-no-drag 
+            className="flex-1 overflow-y-auto px-6 pb-12 pt-12 md:px-12 md:pt-16 touch-pan-y"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             
             {/* Header info */}
             <div className="flex items-start justify-between">

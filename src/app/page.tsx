@@ -12,7 +12,7 @@ import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import CustomCursor from "@/components/CustomCursor";
 import TerminalWidget from "@/components/ui/TerminalWidget";
-import FallingStarsBg from "@/components/FallingStarsBg";
+import AmbientBackground from "@/components/AmbientBackground";
 
 export default function Home() {
   const [showPreloader, setShowPreloader] = useState(true);
@@ -58,7 +58,7 @@ export default function Home() {
         {showPreloader && <Preloader />}
       </AnimatePresence>
       <div className="fixed inset-0 pointer-events-none z-0">
-        <FallingStarsBg speedRef={speedRef} color="#E8792E" count={120} />
+        <AmbientBackground speedRef={speedRef} />
       </div>
       <CustomCursor />
       <Navbar />
