@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
 import type { Project } from "../components/ProjectCard";
 
 export const ROLES = [
@@ -76,40 +77,25 @@ export const projects: Project[] = [
 
 export const experienceItems = [
   {
-    heading: "PTN Events, Vadodara",
-    role: "Software Developer Intern · Feb 2026 – May 2026",
+    company: "PTN Events",
+    role: "Software Developer Intern",
+    dates: "Feb 2026 – May 2026",
     tags: ["React.js", "Node.js", "MUI", "RTK Query"],
-    points: [] as string[],
+    points: [
+      "Designed and implemented a circular reveal dark/light theme animation using the View Transition API.",
+      "Refactored monolithic AddActivity form into 6 modular, reusable components for better maintainability.",
+      "Redesigned the access control permissions module from a complex table to an intuitive card-based layout.",
+      "Developed full CRUD announcement system with role-based access and optimistic UI updates via RTK Query."
+    ]
   },
   {
-    heading: "UI Engineering",
-    role: "Frontend",
-    tags: [] as string[],
+    company: "Converge Digitals",
+    role: "Co-Founder",
+    dates: "May 2026 – Present",
+    tags: ["React", "Next.js", "MERN"],
     points: [
-      "MUI CRM dashboard features",
-      "Circular reveal dark/light theme animation using View Transition API",
-      "Global announcement chip system with dismiss/cooldown logic",
-      "Permissions module redesign from table to card-based layout",
-    ],
-  },
-  {
-    heading: "Backend & APIs",
-    role: "Backend",
-    tags: [] as string[],
-    points: [
-      "Full CRUD announcement system with role-based access",
-      "Activity module APIs with pin/unpin toggle",
-      "RTK Query mutations and optimistic updates",
-    ],
-  },
-  {
-    heading: "Refactoring & Architecture",
-    role: "Architecture",
-    tags: [] as string[],
-    points: [
-      "Refactored monolithic AddActivity form into 6 modular components",
-      "Companies module with search, bulk actions, inline editing, dynamic columns",
-      "Config-driven dynamic form rendering",
-    ],
-  },
+      "Lead technical execution on client web projects, crafting dark-editorial style sites for small and mid-size businesses.",
+      "Folding AI automation into the agency's service offerings to improve client workflows and operational efficiency."
+    ]
+  }
 ];

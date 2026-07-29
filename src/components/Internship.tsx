@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
@@ -87,12 +88,20 @@ export default function Internship() {
                   boxShadow: "0 0 15px rgba(232, 121, 46, 0.15)" 
                 }}
               >
-                <p className="font-mono text-xs uppercase tracking-widest" style={{ color: "var(--color-text-muted)" }}>
+                {/* Header Row: Company name and Dates */}
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                  <h3 className="font-display text-2xl md:text-3xl font-semibold" style={{ color: "var(--color-text-primary)" }}>
+                    {it.company}
+                  </h3>
+                  <span className="font-mono text-xs uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
+                    {it.dates}
+                  </span>
+                </div>
+
+                {/* Sub-header: Role */}
+                <p className="font-mono text-xs uppercase tracking-widest mt-1.5" style={{ color: "var(--color-accent-orange)" }}>
                   {it.role}
                 </p>
-                <h3 className="font-display mt-2 text-2xl md:text-3xl font-semibold" style={{ color: "var(--color-text-primary)" }}>
-                  {it.heading}
-                </h3>
                 
                 {it.tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">

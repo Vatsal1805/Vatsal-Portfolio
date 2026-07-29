@@ -136,8 +136,8 @@ export default function AmbientBackground({
 
       // Render Ambient warm backing glows for depth
       const centerGlow = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.6);
-      centerGlow.addColorStop(0, "rgba(232, 121, 46, 0.03)");
-      centerGlow.addColorStop(0.5, "rgba(216, 154, 58, 0.015)");
+      centerGlow.addColorStop(0, "rgba(232, 121, 46, 0.05)");
+      centerGlow.addColorStop(0.5, "rgba(216, 154, 58, 0.025)");
       centerGlow.addColorStop(1, "transparent");
       ctx.fillStyle = centerGlow;
       ctx.beginPath();
@@ -186,8 +186,8 @@ export default function AmbientBackground({
         });
 
         // Draw structural wireframe lines
-        ctx.strokeStyle = "rgba(232, 121, 46, 0.065)"; // Ultra-subtle accent orange
-        ctx.lineWidth = 0.75;
+        ctx.strokeStyle = "rgba(232, 121, 46, 0.15)"; // Accent orange made more visible
+        ctx.lineWidth = 1.0;
         ctx.beginPath();
 
         s.edges.forEach(([u, v]) => {
@@ -199,7 +199,7 @@ export default function AmbientBackground({
         ctx.stroke();
 
         // Optional: Draw fine point markers on joints
-        ctx.fillStyle = "rgba(232, 121, 46, 0.18)";
+        ctx.fillStyle = "rgba(232, 121, 46, 0.35)"; // Accent orange markers made more visible
         projected.forEach((p) => {
           ctx.beginPath();
           ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);

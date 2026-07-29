@@ -98,13 +98,7 @@ export default function Projects() {
     });
   };
 
-  // Helper to generate the terminal block-style progress bar
-  const getProgressLoader = (index: number, total: number) => {
-    const totalBlocks = 12;
-    const filledBlocks = Math.round(((index + 1) / total) * totalBlocks);
-    const emptyBlocks = totalBlocks - filledBlocks;
-    return `${"█".repeat(filledBlocks)}${"░".repeat(emptyBlocks)}`;
-  };
+
 
   return (
     <div 
@@ -152,14 +146,21 @@ export default function Projects() {
                 {/* Minimal Progress & Slider Navigation */}
                 <div className="mt-8 flex flex-col max-w-sm">
                   
-                  {/* Terminal-style block progress bar */}
-                  <div className="flex items-center gap-2.5 font-mono text-xs md:text-sm text-accent-orange mb-6 select-none">
-                    <span className="tracking-tighter">
-                      [{getProgressLoader(activeIndex, totalSlides)}]
-                    </span>
-                    <span className="font-bold ml-2">
-                      0{activeIndex + 1} / 0{totalSlides}
-                    </span>
+                  {/* Professional slider progress bar */}
+                  <div className="flex items-center gap-4 font-mono text-xs text-text-muted select-none mb-6">
+                    <span>0{activeIndex + 1}</span>
+                    <div className="relative w-48 h-[2px]" style={{ background: "var(--color-border-line)" }}>
+                      <motion.div 
+                        className="absolute top-0 left-0 h-full rounded-full"
+                        style={{ 
+                          background: "linear-gradient(90deg, var(--color-accent-orange) 0%, var(--color-accent-amber) 100%)",
+                          boxShadow: "0 0 6px rgba(232, 121, 46, 0.5)"
+                        }}
+                        animate={{ width: `${((activeIndex + 1) / totalSlides) * 100}%` }}
+                        transition={{ type: "spring", stiffness: 120, damping: 20 }}
+                      />
+                    </div>
+                    <span>0{totalSlides}</span>
                   </div>
 
                   {/* Prev / Next Controls */}

@@ -75,20 +75,20 @@ const SKILLS_DATA = {
     id: "learning",
     name: "learning.json",
     content: `{
-  "category": "Foundations & AI Roadmap",
-  "languages": [
-    "JavaScript (ES6+)",
-    "SQL",
-    "Python",
-    "C++"
-  ],
+  "category": "AI Engineering",
   "ai_toolkit": [
     "LangChain",
     "Google Gemini API",
-    "RAG Pipelines",
-    "LangGraph",
-    "crewAI Multi-Agent",
-    "QLoRA Fine-Tuning"
+    "Hugging Face Transformers",
+    "RAG Fundamentals",
+    "Tool / Function Calling",
+    "Agent Architecture (MCP)",
+    "Prompt Engineering"
+  ],
+  "roadmap": [
+    "Multi-agent systems",
+    "Fine-tuning & quantization",
+    "Production LLM deployment"
   ],
   "status": "Active AI Engineering Learning Path"
 }

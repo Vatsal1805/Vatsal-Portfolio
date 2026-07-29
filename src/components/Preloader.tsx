@@ -5,7 +5,8 @@ import { useEffect, useState, useRef } from "react";
 export default function Preloader() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [decodedText, setDecodedText] = useState("");
-  const targetText = "[ VATSAL.SYS ]";
+  const [progress, setProgress] = useState(0);
+  const targetText = "[ VATSAL.DEV ]";
   const chars = "!?&@#$%^*+=_-/\\<>[]{}";
 
   // Cipher decryption text effect
@@ -33,6 +34,27 @@ export default function Preloader() {
     }, 40);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Smooth loading progress bar (0% to 100% over 1.9s)
+  useEffect(() => {
+    const startTime = performance.now();
+    const duration = 1900; 
+    
+    let frameId: number;
+    const updateProgress = (now: number) => {
+      const elapsed = now - startTime;
+      const pct = Math.min(100, (elapsed / duration) * 100);
+      setProgress(pct);
+      if (pct < 100) {
+        frameId = requestAnimationFrame(updateProgress);
+      }
+    };
+    
+    frameId = requestAnimationFrame(updateProgress);
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, []);
 
   // Symmetric hyper-speed star tunnel animation
@@ -139,8 +161,8 @@ export default function Preloader() {
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
       
-      {/* Centered Monogram - Interactive Cipher Text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+      {/* Centered Monogram & Dynamic Status Text */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[1]">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -158,17 +180,55 @@ export default function Preloader() {
         >
           {decodedText}
         </motion.div>
-      </div>
 
-      <div className="absolute inset-0 flex items-end justify-center pb-16 z-10">
-        <motion.span
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 1.6, repeat: Infinity }}
-          className="font-mono text-[11px] uppercase tracking-[0.3em]"
+        {/* Dynamic Status Text placed below the main monogram */}
+        <motion.span 
+          key={progress < 30 ? 1 : progress < 65 ? 2 : progress < 90 ? 3 : progress < 100 ? 4 : 5}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 0.7, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="font-mono text-[10px] uppercase tracking-[0.25em] mt-6 text-center px-6 max-w-md"
           style={{ color: "var(--color-text-muted)" }}
         >
-          Initializing Portfolio
+          {progress < 30 
+            ? "PROMPTING AI TO DO MY JOB..." 
+            : progress < 65 
+            ? "FILTERING OUT AI HALLUCINATIONS..." 
+            : progress < 90 
+            ? "MAKING BUGS LOOK LIKE DESIGN CHOICES..." 
+            : progress < 100
+            ? "REPLACING DEVELOPER WITH AI (FAILED)..."
+            : "LAUNCHED (99.9% HUMAN CODED)"}
         </motion.span>
+      </div>
+
+      {/* Loading Progress Bar Container at the bottom */}
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-20 z-10 pointer-events-none">
+        <div 
+          className="flex justify-between w-64 mb-2 font-mono text-[10px] tracking-[0.2em]"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          <span>SYSTEM_INIT</span>
+          <span style={{ color: "var(--color-accent-orange)" }}>
+            {Math.floor(progress).toString().padStart(3, "0")}%
+          </span>
+        </div>
+        
+        {/* Loading Bar Track */}
+        <div 
+          className="w-64 h-[2px] relative overflow-hidden rounded-full"
+          style={{ backgroundColor: "var(--color-border-line)" }}
+        >
+          {/* Progress Indicator */}
+          <div 
+            className="h-full transition-all duration-75 ease-out"
+            style={{ 
+              width: `${progress}%`,
+              background: "linear-gradient(90deg, var(--color-accent-orange) 0%, var(--color-accent-amber) 100%)",
+              boxShadow: "0 0 6px rgba(232, 121, 46, 0.4)"
+            }}
+          />
+        </div>
       </div>
     </motion.div>
   );
