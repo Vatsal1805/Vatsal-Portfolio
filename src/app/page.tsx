@@ -21,6 +21,11 @@ export default function Home() {
   const speedRef = useRef(8);
 
   useEffect(() => {
+    console.log(
+      "%cpsst... there's more here.\n%ctry the terminal in the corner. type: hack",
+      "color: #E8792E; font-family: monospace; font-size: 14px; font-weight: bold;",
+      "color: #A79C8E; font-family: monospace; font-size: 12px;"
+    );
     document.body.style.overflow = "hidden";
 
     let lenisInstance: Lenis | null = null;

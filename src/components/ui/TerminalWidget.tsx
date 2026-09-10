@@ -19,6 +19,37 @@ export default function TerminalWidget() {
   const [inputVal, setInputVal] = useState("");
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [hasSeenCerts, setHasSeenCerts] = useState(false);
+  const [hasOpenedTerminal, setHasOpenedTerminal] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("hasOpenedTerminal") === "true") {
+      setHasOpenedTerminal(true);
+    }
+
+    const handleScroll = () => {
+      const certsEl = document.getElementById("certifications");
+      if (certsEl) {
+        const rect = certsEl.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.8) {
+          setHasSeenCerts(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleOpenTerminal = () => {
+    setIsOpen(true);
+    setHasOpenedTerminal(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("hasOpenedTerminal", "true");
+    }
+  };
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -161,10 +192,24 @@ export default function TerminalWidget() {
 
       case "hack":
         outputs = [
-          { text: "[!] INITIATING AGENTIC MATRIX BYPASS...", type: "error" },
-          { text: "[>] Connecting to OCI & AWS Bedrock Endpoints...", type: "output" },
-          { text: "[>] Injecting LangChain Tool-Calling Agents...", type: "output" },
-          { text: "[>] Access Granted: You are now interacting with Vatsal's system.", type: "output" },
+          { text: "> INITIATING UNAUTHORIZED ACCESS...", type: "output" },
+          { text: "> BYPASSING FIREWALL... [oh wait, it's my own site]", type: "output" },
+          { text: "> DECRYPTING RESTRICTED_DIRECTORY... ?????????? 80%", type: "output" },
+          { text: "> ACCESS GRANTED. (that was easy, I built the lock too)", type: "output" },
+          { text: "", type: "output" },
+          { text: "> LOCATING HIDDEN_PROJECT...", type: "output" },
+          { text: "> FOUND: linkedin-content-and-leadgen-engine.exe", type: "output" },
+          { text: "", type: "output" },
+          { text: "  > STATUS: LIVE (internal tool, not publicly deployed)", type: "output" },
+          { text: "  > BUILT WITH: Gemini API, PageSpeed API, Places API", type: "output" },
+          { text: "  > FUN FACT: caught the AI fabricating data mid-build,", type: "output" },
+          { text: "    fired it, wired in real APIs instead. no hard feelings.", type: "output" },
+          { text: "", type: "output" },
+          { text: "> no public link ? this one runs quietly in the background", type: "output" },
+          { text: "  for Converge clients. ask me about it if you're curious.", type: "output" },
+          { text: "", type: "output" },
+          { text: "> type 'projects' to see the public work, or", type: "output" },
+          { text: "> type 'exit' if you're done snooping around", type: "output" },
         ];
         break;
 
@@ -225,13 +270,14 @@ export default function TerminalWidget() {
       {/* Floating CLI Launch Button */}
       {!isOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenTerminal}
           className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full border shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer font-mono text-xs"
           style={{
             background: "#171512",
             borderColor: accentColor,
             color: "#F4EDE3",
             boxShadow: `0 4px 20px ${accentColor}25`,
+            animation: hasSeenCerts && !hasOpenedTerminal ? "pulseAmberGlow 1.5s ease-in-out 3" : "none",
           }}
         >
           <Terminal size={15} style={{ color: accentColor }} />

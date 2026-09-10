@@ -187,7 +187,7 @@ export default function Projects() {
 
                 {/* Technical footnote */}
                 <p className="mt-8 font-mono text-[10px] uppercase tracking-widest text-text-faint max-w-xs leading-normal select-none">
-                  3 projects — all built, shipped, and refined through real constraints.
+                  4 projects — all built, shipped, and refined through real constraints.
                 </p>
               </div>
             </div>

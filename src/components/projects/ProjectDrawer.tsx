@@ -12,6 +12,43 @@ type ProjectDrawerProps = {
 };
 
 // Architecture Diagram Components
+function ConvergeReviewsArchitecture() {
+  return (
+    <svg className="w-full h-auto max-w-xl mx-auto my-6" viewBox="0 0 500 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow-gold" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+      <rect width="500" height="240" rx="12" fill="#171512" stroke="#2A241D" />
+      <path d="M85 120 H135" stroke="#D89A3A" strokeWidth="2" strokeDasharray="4 2" />
+      <path d="M195 120 H245" stroke="#D89A3A" strokeWidth="2" />
+      <path d="M305 85 H365" stroke="#D89A3A" strokeWidth="1.5" />
+      <path d="M305 155 H365" stroke="#D89A3A" strokeWidth="1.5" />
+      <rect x="15" y="80" width="70" height="80" rx="8" fill="#0E0D0B" stroke="#2A241D" />
+      <text x="50" y="112" fill="#F4EDE3" fontSize="10" fontFamily="JetBrains Mono" textAnchor="middle">QR Scan</text>
+      <text x="50" y="127" fill="#A79C8E" fontSize="8" fontFamily="JetBrains Mono" textAnchor="middle">/r/[slug]</text>
+      <text x="50" y="140" fill="#D89A3A" fontSize="7" fontFamily="JetBrains Mono" textAnchor="middle">56px Touch</text>
+      <rect x="135" y="80" width="60" height="80" rx="8" fill="#0E0D0B" stroke="#D89A3A" filter="url(#glow-gold)" />
+      <text x="165" y="112" fill="#F4EDE3" fontSize="10" fontFamily="JetBrains Mono" textAnchor="middle">Next.js</text>
+      <text x="165" y="127" fill="#A79C8E" fontSize="8" fontFamily="JetBrains Mono" textAnchor="middle">App &amp; API</text>
+      <rect x="245" y="70" width="60" height="100" rx="8" fill="#0E0D0B" stroke="#2A241D" />
+      <text x="275" y="105" fill="#D89A3A" fontSize="9" fontFamily="JetBrains Mono" textAnchor="middle">Supabase</text>
+      <line x1="250" y1="120" x2="300" y2="120" stroke="#2A241D" />
+      <text x="275" y="135" fill="#F4EDE3" fontSize="8" fontFamily="JetBrains Mono" textAnchor="middle">Multi-Tenant</text>
+      <text x="275" y="150" fill="#A79C8E" fontSize="7" fontFamily="JetBrains Mono" textAnchor="middle">RLS Policy</text>
+      <rect x="365" y="55" width="85" height="55" rx="6" fill="#0E0D0B" stroke="#2A241D" />
+      <text x="407" y="78" fill="#F4EDE3" fontSize="9" fontFamily="JetBrains Mono" textAnchor="middle">Gemini Flash</text>
+      <text x="407" y="93" fill="#A79C8E" fontSize="7" fontFamily="JetBrains Mono" textAnchor="middle">Anti-AI Drafts</text>
+      <rect x="365" y="130" width="85" height="55" rx="6" fill="#0E0D0B" stroke="#2A241D" />
+      <text x="407" y="153" fill="#F4EDE3" fontSize="9" fontFamily="JetBrains Mono" textAnchor="middle">Razorpay</text>
+      <text x="407" y="168" fill="#A79C8E" fontSize="7" fontFamily="JetBrains Mono" textAnchor="middle">Subscriptions</text>
+    </svg>
+  );
+}
+
+
 function SocialMediaArchitecture() {
   return (
     <svg className="w-full h-auto max-w-xl mx-auto my-6" viewBox="0 0 500 240" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Github, FileText } from "lucide-react";
+import { Github, FileText, ExternalLink } from "lucide-react";
 import type { MouseEvent } from "react";
 import ProjectDrawer from "./projects/ProjectDrawer";
 
@@ -18,7 +18,7 @@ export type Project = {
     solution: string;
     lessons: string;
     architectureDesc: string;
-    diagramType: "social" | "homeease" | "zomato" | "generic";
+    diagramType: "converge" | "social" | "homeease" | "zomato" | "generic";
     steps?: string[];
   };
 };
@@ -31,16 +31,13 @@ export default function ProjectCard({ p }: { p: Project }) {
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 200, damping: 20 });
 
   useEffect(() => {
-    // Check if device supports gyro and is touch-enabled
     if (typeof window === "undefined" || !window.matchMedia("(pointer: coarse)").matches) return;
 
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (e.beta === null || e.gamma === null) return;
-      // Normal holding tilt is roughly 45 deg pitch (beta) and 0 deg roll (gamma)
-      const pitch = Math.min(Math.max(e.beta - 45, -30), 30) / 30; // -1 to 1
-      const roll = Math.min(Math.max(e.gamma, -30), 30) / 30;    // -1 to 1
+      const pitch = Math.min(Math.max(e.beta - 45, -30), 30) / 30;
+      const roll = Math.min(Math.max(e.gamma, -30), 30) / 30;
 
-      // Set motion values directly for card tilt
       x.set(roll * 0.35);
       y.set(pitch * 0.35);
     };
@@ -58,6 +55,8 @@ export default function ProjectCard({ p }: { p: Project }) {
   };
   const onLeave = () => { x.set(0); y.set(0); };
 
+  const isFlagship = p.tag.includes("FLAGSHIP");
+
   return (
     <div style={{ perspective: 1200 }} className="h-full w-full">
       <motion.div
@@ -68,7 +67,12 @@ export default function ProjectCard({ p }: { p: Project }) {
         className="relative h-full min-h-[380px] flex flex-col justify-between rounded-2xl border p-8"
       >
         <div>
-          <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: p.accent, transform: "translateZ(40px)", display: "inline-block" }}>{p.tag}</span>
+          <span
+            className={`font-mono text-[10px] uppercase tracking-widest ${isFlagship ? "font-bold border border-[#D89A3A]/40 bg-[#D89A3A]/10 px-2.5 py-1 rounded-sm" : ""}`}
+            style={{ color: isFlagship ? "#D89A3A" : p.accent, transform: "translateZ(40px)", display: "inline-block" }}
+          >
+            {p.tag}
+          </span>
           <h3 className="font-display mt-3 text-2xl md:text-3xl font-bold" style={{ color: "#F4EDE3", transform: "translateZ(50px)" }}>{p.title}</h3>
           <p className="mt-4 text-sm leading-relaxed" style={{ color: "#A79C8E", transform: "translateZ(30px)" }}>{p.description}</p>
           <div className="mt-6 flex flex-wrap gap-2" style={{ transform: "translateZ(60px)" }}>
@@ -77,7 +81,7 @@ export default function ProjectCard({ p }: { p: Project }) {
             ))}
           </div>
         </div>
-        <div className="mt-8 flex gap-3" style={{ transform: "translateZ(20px)" }}>
+        <div className="mt-8 flex flex-wrap gap-3" style={{ transform: "translateZ(20px)" }}>
           <button
             onClick={() => setIsOpen(true)}
             className="inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-xs cursor-pointer select-none"
@@ -85,6 +89,11 @@ export default function ProjectCard({ p }: { p: Project }) {
           >
             <FileText size={14} /> View Case Study
           </button>
+          {p.demo && (
+            <a href={p.demo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border px-4 py-2 font-mono text-xs hover:border-white/25 transition-colors" style={{ borderColor: "#2A241D", color: "#F4EDE3" }}>
+              <ExternalLink size={14} /> Live Site
+            </a>
+          )}
           {p.github && (
             <a href={p.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border px-4 py-2 font-mono text-xs hover:border-white/25 transition-colors" style={{ borderColor: "#2A241D", color: "#F4EDE3" }}>
               <Github size={14} /> Code
@@ -96,4 +105,4 @@ export default function ProjectCard({ p }: { p: Project }) {
       <ProjectDrawer p={p} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
-}
+}

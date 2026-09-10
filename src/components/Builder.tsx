@@ -7,7 +7,7 @@ import vatsalPhoto from "@/assets/vatsal.jpg";
 import { stack } from "../data/portfolioData";
 
 const biographyText =
-  "Full-stack developer (MERN) moving into AI engineering. Shipped three production apps solo, plus four months at PTN Events building CRM features in sprint cycles. Currently building LLM engineering skills: frontier model APIs, tool calling, LangChain, MCP, and agent architectures. Hold the Oracle Agentic AI Foundations Associate and AWS Certified AI Practitioner certifications.";
+  "Full-stack developer (MERN) moving into AI engineering. Shipped three production apps solo, plus a multi-tenant SaaS product at Converge Digitals, and four months at PTN Events building CRM features in sprint cycles. Currently building LLM engineering skills: frontier model APIs, tool calling, LangChain, MCP, and agent architectures. Hold the Oracle Agentic AI Foundations Associate and AWS Certified AI Practitioner certifications.";
 
 const bioWords = biographyText.split(" ");
 
