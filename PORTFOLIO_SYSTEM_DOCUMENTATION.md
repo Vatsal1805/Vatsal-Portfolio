@@ -174,3 +174,29 @@ The website utilizes a custom **"Warm Terminal / Builder Editorial"** design sys
     * `clear`: Clears log buffer.
     * `exit`: Closes overlay.
   * **History Navigation**: Up/Down arrow key support to cycle through past executed commands.
+
+
+## Flagship Upgrade & Terminal Discovery System
+
+### 4. Work Section (`src/components/Projects.tsx` & `src/components/ProjectCard.tsx`)
+- **Total Slides**: 4 Projects (`01 / 04` progress indicator).
+- **Projects Order**:
+  1. **Converge Reviews**: FLAGSHIP ? Production SaaS (styled with gold `#D89A3A` badge, live site button, multi-tenant QR & Gemini review generator).
+  2. **Social Media Content Analyzer**: GenAI ? Full-Stack (Google Gemini API, OCR pipeline with Tesseract.js).
+  3. **HomeEase**: System Design ? Full-Stack (Role-based marketplace, layered JWT auth).
+  4. **Zomato-Reel Video Platform**: Backend ? Media (Multer RAM stream, ImageKit CDN).
+
+### 5. Case Study Drawer & System Architecture (`src/components/projects/ProjectDrawer.tsx`)
+- **Converge Reviews Entry**: Full problem statement, technical solution, bulleted technical lessons (Supabase RLS isolation, anti-AI prompt engineering, Razorpay Subscriptions billing flow), technologies utilized, and step-by-step data flow list.
+- **Converge Reviews Architecture Diagram (`ConvergeReviewsArchitecture`)**: Custom gold-accented SVG diagram showing flow:
+  `QR Scan Intake (/r/[slug])` ? `Next.js App & API` ? `Supabase Multi-Tenant RLS` ? `Gemini Flash Anti-AI Engine` ? `Razorpay Webhook Engine` ? `Client & Super-Admin Dashboards`.
+
+### 6. Interactive Terminal Widget (`src/components/ui/TerminalWidget.tsx`)
+- **`hack` Easter Egg Sequence**: Multi-line log output uncovering internal tool `linkedin-content-and-leadgen-engine.exe` built with Gemini API, PageSpeed API, and Places API.
+- **Scroll-Triggered Pulse Animation**: Automatically detects when user scrolls past `#certifications` section for the first time (`hasSeenCerts`). Triggers a 3-loop soft amber pulse glow (`pulseAmberGlow`) on the floating terminal launcher button. Clicking the terminal sets `hasOpenedTerminal` and persists `sessionStorage.setItem("hasOpenedTerminal", "true")`, permanently suppressing the pulse for the session.
+
+### 7. Discovery Hooks & Footer
+- **Browser Console Discovery Hook**: Initial load `useEffect` in `src/app/page.tsx` prints stylized console message:
+  `psst... there's more here. try the terminal in the corner. type: hack`
+- **Footer Comment**: Stray code comment styled in muted JetBrains Mono directly below footer copyright in `src/components/Contact.tsx`:
+  `// there's a hidden directory somewhere`
