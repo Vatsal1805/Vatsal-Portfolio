@@ -21,6 +21,11 @@ export default function TerminalWidget() {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [hasSeenCerts, setHasSeenCerts] = useState(false);
   const [hasOpenedTerminal, setHasOpenedTerminal] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -51,16 +56,10 @@ export default function TerminalWidget() {
     }
   };
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  // Auto-scroll to bottom of log
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
 
-  // Focus input when terminal is opened or clicked
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 150);
@@ -72,6 +71,7 @@ export default function TerminalWidget() {
   };
 
   const handleCommand = (cmdText: string) => {
+    if (isTyping) return;
     const trimmed = cmdText.trim();
     if (!trimmed) return;
 
@@ -82,7 +82,6 @@ export default function TerminalWidget() {
     const newEntry: LogEntry = { text: `vatsal@portfolio:~$ ${trimmed}`, type: "input" };
     let outputs: LogEntry[] = [];
 
-    // Add to command history
     const updatedHistory = [trimmed, ...cmdHistory.filter((c) => c !== trimmed)];
     setCmdHistory(updatedHistory);
     setHistoryIndex(-1);
@@ -150,9 +149,10 @@ export default function TerminalWidget() {
       case "projects":
         outputs = [
           { text: "FEATURED PRODUCTION BUILDS:", type: "output" },
-          { text: "  1. Social Media Content Analyzer (React, Node, Gemini AI, Tesseract.js OCR)", type: "output" },
-          { text: "  2. HomeEase — Home Services Marketplace (MERN, JWT, Location/Pincode Filters)", type: "output" },
-          { text: "  3. Zomato-Reel Video Platform (React 19, Express 5, ImageKit CDN, Multer RAM stream)", type: "output" },
+          { text: "  1. Converge Reviews (Next.js, Supabase, Gemini Flash, Razorpay - Flagship SaaS)", type: "output" },
+          { text: "  2. Social Media Content Analyzer (React, Node, Gemini AI, Tesseract.js OCR)", type: "output" },
+          { text: "  3. HomeEase - Home Services Marketplace (MERN, JWT, Location/Pincode Filters)", type: "output" },
+          { text: "  4. Zomato-Reel Video Platform (React 19, Express 5, ImageKit CDN, Multer RAM stream)", type: "output" },
         ];
         break;
 
@@ -194,7 +194,7 @@ export default function TerminalWidget() {
         outputs = [
           { text: "> INITIATING UNAUTHORIZED ACCESS...", type: "output" },
           { text: "> BYPASSING FIREWALL... [oh wait, it's my own site]", type: "output" },
-          { text: "> DECRYPTING RESTRICTED_DIRECTORY... ?????????? 80%", type: "output" },
+          { text: "> DECRYPTING RESTRICTED_DIRECTORY... [########..] 80%", type: "output" },
           { text: "> ACCESS GRANTED. (that was easy, I built the lock too)", type: "output" },
           { text: "", type: "output" },
           { text: "> LOCATING HIDDEN_PROJECT...", type: "output" },
@@ -236,8 +236,25 @@ export default function TerminalWidget() {
         break;
     }
 
-    setHistory((prev) => [...prev, newEntry, ...outputs]);
+    setHistory((prev) => [...prev, newEntry]);
     setInputVal("");
+
+    if (outputs.length > 0) {
+      setIsTyping(true);
+      let idx = 0;
+      const timer = setInterval(() => {
+        if (idx < outputs.length) {
+          const line = outputs[idx];
+          setHistory((prev) => [...prev, line]);
+          idx++;
+        } else {
+          clearInterval(timer);
+          setIsTyping(false);
+        }
+      }, 90);
+    } else {
+      setIsTyping(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -267,6 +284,8 @@ export default function TerminalWidget() {
 
   return (
     <>
+      <style>{`@keyframes pulseAmberGlow { 0%, 100% { box-shadow: 0 4px 20px rgba(232, 121, 46, 0.25); } 50% { box-shadow: 0 0 25px rgba(232, 121, 46, 0.85), 0 0 10px rgba(232, 121, 46, 0.6); } }`}</style>
+      
       {/* Floating CLI Launch Button */}
       {!isOpen && (
         <button
@@ -281,7 +300,7 @@ export default function TerminalWidget() {
           }}
         >
           <Terminal size={15} style={{ color: accentColor }} />
-          <span>vatsal@terminal:~$</span>
+          <span className="hidden sm:inline">vatsal@terminal:~$</span>
         </button>
       )}
 
@@ -319,8 +338,11 @@ export default function TerminalWidget() {
             </button>
           </div>
 
-          {/* Log Output Area */}
-          <div className="flex-1 p-4 font-mono text-xs overflow-y-auto space-y-2 leading-relaxed">
+          {/* Log Output Area ? data-lenis-prevent enables mouse cursor & touch scrolling */}
+          <div
+            data-lenis-prevent
+            className="flex-1 p-4 font-mono text-xs overflow-y-auto overscroll-contain space-y-2 leading-relaxed"
+          >
             {history.map((entry, idx) => (
               <div
                 key={idx}
@@ -348,10 +370,11 @@ export default function TerminalWidget() {
               ref={inputRef}
               type="text"
               value={inputVal}
+              disabled={isTyping}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="type 'help'..."
-              className="flex-1 bg-transparent font-mono text-xs text-[#F4EDE3] outline-none placeholder-[#A79C8E]/50"
+              placeholder={isTyping ? "executing..." : "type 'help'..."}
+              className="flex-1 bg-transparent font-mono text-xs text-[#F4EDE3] outline-none placeholder-[#A79C8E]/50 disabled:opacity-50"
             />
           </div>
         </div>

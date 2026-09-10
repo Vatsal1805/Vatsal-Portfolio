@@ -205,7 +205,8 @@ export default function ProjectDrawer({ p, isOpen, onClose }: ProjectDrawerProps
           {/* Scrollable Wrapper - prevents Vaul drag and binds scroll to container */}
           <div 
             data-vaul-no-drag 
-            className="flex-1 overflow-y-auto touch-pan-y w-full h-full"
+            data-lenis-prevent
+            className="flex-1 overflow-y-auto overscroll-contain touch-pan-y w-full h-full"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             <div className="px-6 pb-12 pt-12 md:px-12 md:pt-16 w-full max-w-6xl mx-auto">

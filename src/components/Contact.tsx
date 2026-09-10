@@ -231,7 +231,7 @@ export default function Contact() {
           ))}
         </div>
 
-        <p className="mt-24 font-mono text-[10px] uppercase tracking-widest" style={{ color: "#A79C8E" }}>Built by Vatsal Bhavsar ? 2026</p>
+        <p className="mt-24 font-mono text-[10px] uppercase tracking-widest" style={{ color: "#A79C8E" }}>Built by Vatsal Bhavsar - 2026</p>
         <p className="mt-2 font-mono text-[10px] lowercase tracking-normal text-[#A79C8E]/70 select-none">// there's a hidden directory somewhere</p>
       </div>
     </section>
