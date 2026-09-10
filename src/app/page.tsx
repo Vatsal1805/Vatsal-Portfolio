@@ -8,6 +8,7 @@ import Hero from "@/components/Hero";
 import Builder from "@/components/Builder";
 import Projects from "@/components/Projects";
 import Internship from "@/components/Internship";
+import Certifications from "@/components/Certifications";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import CustomCursor from "@/components/CustomCursor";
@@ -21,6 +22,11 @@ export default function Home() {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
+    let lenisInstance: Lenis | null = null;
+    let rafId: number | null = null;
+    let slowRafId: number | null = null;
+
     const t = setTimeout(() => {
       setShowPreloader(false);
       setReady(true);
@@ -30,12 +36,17 @@ export default function Home() {
       const slow = (now: number) => {
         const k = Math.min(1, (now - start) / 1500);
         speedRef.current = 8 - k * 7;
-        if (k < 1) requestAnimationFrame(slow);
-        else speedRef.current = 1;
+        if (k < 1) {
+          slowRafId = requestAnimationFrame(slow);
+        } else {
+          speedRef.current = 1;
+        }
       };
-      requestAnimationFrame(slow);
+      slowRafId = requestAnimationFrame(slow);
 
       const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+      lenisInstance = lenis;
+
       lenis.on("scroll", (e: any) => {
         const val = 1 + Math.min(12, Math.abs(e.velocity) * 1.5);
         if (val > speedRef.current) {
@@ -43,13 +54,20 @@ export default function Home() {
         }
       });
       const raf = (time: number) => {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
+        if (document.body.style.overflow !== "hidden") {
+          lenis.raf(time);
+        }
+        rafId = requestAnimationFrame(raf);
       };
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }, 2400);
 
-    return () => clearTimeout(t);
+    return () => {
+      clearTimeout(t);
+      if (slowRafId) cancelAnimationFrame(slowRafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (lenisInstance) lenisInstance.destroy();
+    };
   }, []);
 
   return (
@@ -66,6 +84,7 @@ export default function Home() {
       <Builder />
       <Projects />
       <Internship />
+      <Certifications />
       <Skills />
       <Contact />
       <TerminalWidget />

@@ -1,104 +1,109 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Terminal } from "lucide-react";
+import { Terminal, FileCode2 } from "lucide-react";
 
-type SkillCategory = "frontend" | "backend" | "devops" | "learning";
+type SkillCategory = "ai_llm" | "languages" | "frameworks" | "backend_cloud";
 
 const SKILLS_DATA = {
-  frontend: {
-    id: "frontend",
-    name: "frontend.json",
+  ai_llm: {
+    id: "ai_llm",
+    name: "ai_llm.json",
     content: `{
-  "category": "Frontend Engineering",
-  "frameworks": [
-    "React.js",
-    "Next.js",
-    "Tailwind CSS v4",
-    "HTML5 / CSS3",
-    "Material UI"
+  "category": "AI & Agentic Systems",
+  "architectures": [
+    "Agent Architecture (Reasoning Engine, Orchestration Loop, Tools)",
+    "Model Context Protocol (MCP)",
+    "RAG (Retrieval-Augmented Generation)"
   ],
-  "tooling": [
-    "Vite",
-    "Turbopack"
+  "frameworks_and_apis": [
+    "LangChain",
+    "Google Gemini API",
+    "Hugging Face (Transformers & Pipelines)",
+    "Tool-Calling / Function-Calling",
+    "Gradio Agent Frontends"
   ],
-  "animations": [
-    "Framer Motion",
-    "Lenis Scroll"
+  "certifications": [
+    "Oracle Agentic AI Foundations Associate (2026)",
+    "AWS Certified AI Practitioner AIF-C01 (2026)"
   ]
-}
-
-`
+}`
   },
-  backend: {
-    id: "backend",
-    name: "backend.json",
+  languages: {
+    id: "languages",
+    name: "languages.json",
     content: `{
-  "category": "Backend & Database Systems",
-  "technologies": [
+  "category": "Programming Languages",
+  "primary": [
+    "JavaScript (ES6+)",
+    "TypeScript",
+    "Python"
+  ],
+  "systems_and_query": [
+    "C++",
+    "SQL (Queries, Joins, Schema Design)"
+  ]
+}`
+  },
+  frameworks: {
+    id: "frameworks",
+    name: "frameworks.json",
+    content: `{
+  "category": "Frontend & UI Engineering",
+  "frameworks": [
+    "React.js (v18 & v19)",
+    "Next.js (App Router)",
+    "Tailwind CSS (v3 & v4)",
+    "HTML5 / CSS3"
+  ],
+  "motion_and_effects": [
+    "Framer Motion",
+    "Lenis Smooth Scroll",
+    "Swiper.js",
+    "Vaul Drawers"
+  ],
+  "ui_tooling": [
+    "Vite",
+    "Shadcn UI",
+    "Lucide Icons"
+  ]
+}`
+  },
+  backend_cloud: {
+    id: "backend_cloud",
+    name: "backend_cloud.json",
+    content: `{
+  "category": "Backend, Databases & Cloud",
+  "runtime_and_security": [
     "Node.js",
     "Express.js",
-    "REST APIs",
+    "REST API Design",
     "JWT Authentication",
-    "Multer Ingestion"
+    "Role-Based Access Control (RBAC)",
+    "Multer Streaming Ingestion"
   ],
   "databases": [
     "MongoDB",
     "MongoDB Atlas",
     "MySQL",
-    "Mongoose ORM",
-    "ImageKit CDN"
+    "Mongoose ODM"
   ],
-  "architecture": "MVC / Serverless Gateway"
-}
-
-`
-  },
-  devops: {
-    id: "devops",
-    name: "devops.json",
-    content: `{
-  "category": "DevOps & Tooling",
-  "ecosystem": [
-    "Git",
-    "GitHub",
+  "cloud_and_tooling": [
+    "AWS",
+    "OCI (Oracle Cloud Infrastructure)",
     "Vercel",
+    "Render",
+    "ImageKit CDN",
+    "Git / GitHub",
     "Postman",
-    "VS Code"
-  ],
-  "workflows": "CI/CD & Git Flow versioning",
-  "deployments": "Vercel Edge & CDN routing"
-}
-
-`
-  },
-  learning: {
-    id: "learning",
-    name: "learning.json",
-    content: `{
-  "category": "AI Engineering",
-  "ai_toolkit": [
-    "LangChain",
-    "Google Gemini API",
-    "Hugging Face Transformers",
-    "RAG Fundamentals",
-    "Tool / Function Calling",
-    "Agent Architecture (MCP)",
-    "Prompt Engineering"
-  ],
-  "roadmap": [
-    "Multi-agent systems",
-    "Fine-tuning & quantization",
-    "Production LLM deployment"
-  ],
-  "status": "Active AI Engineering Learning Path"
-}
-
-`
+    "Antigravity IDE",
+    "Cursor IDE"
+  ]
+}`
   }
 };
 
 export default function Skills() {
-  const [selectedId, setSelectedId] = useState<SkillCategory>("frontend");
+  const [selectedId, setSelectedId] = useState<SkillCategory>("ai_llm");
   const [typedLength, setTypedLength] = useState(0);
   const [blink, setBlink] = useState(true);
   const rightPanelRef = useRef<HTMLDivElement | null>(null);
@@ -106,7 +111,7 @@ export default function Skills() {
 
   const selectedContent = SKILLS_DATA[selectedId].content;
 
-  // Typewriter effect (18ms per character)
+  // Typewriter effect (18ms per character for snappy response)
   useEffect(() => {
     setTypedLength(0);
     const interval = setInterval(() => {
@@ -115,7 +120,7 @@ export default function Skills() {
           clearInterval(interval);
           return selectedContent.length;
         }
-        return prev + 1;
+        return prev + 2;
       });
     }, 18);
     return () => clearInterval(interval);
@@ -141,35 +146,8 @@ export default function Skills() {
   const displayedText = selectedContent.slice(0, typedLength);
   const lines = displayedText.split("\n");
 
-  const renderLineWithColor = (line: string) => {
-    // Check if this line is a telemetry bar line, e.g., containing [████████░░░░]
-    const match = line.match(/^(\s*\[)([█░]+)(\].*)$/);
-    if (match) {
-      const [, before, blocks, after] = match;
-      return (
-        <>
-          <span className="text-text-muted">{before}</span>
-          {Array.from(blocks).map((char, i) => {
-            if (char === "█") {
-              return <span key={i} className="text-accent-orange">█</span>;
-            } else {
-              return <span key={i} className="text-border-line">░</span>;
-            }
-          })}
-          <span className="text-text-primary">{after}</span>
-        </>
-      );
-    }
-    
-    if (line.startsWith("--")) {
-      return <span className="text-text-muted font-semibold">{line}</span>;
-    }
-    
-    return <span className="text-text-primary">{line}</span>;
-  };
-
   return (
-    <section id="skills" className="relative w-full px-6 py-32" style={{ background: "transparent" }}>
+    <section id="skills" className="relative w-full px-6 py-32 border-t" style={{ borderColor: "#2A241D", background: "transparent" }}>
       {/* Background warmth glow */}
       <div 
         className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none z-0 rounded-full opacity-[0.03] filter blur-[150px]"
@@ -184,15 +162,16 @@ export default function Skills() {
         </p>
 
         {/* Dual Panel Layout */}
-        <div className="flex flex-col lg:flex-row border border-border-line rounded-xl overflow-hidden bg-bg-surface min-h-[500px]">
+        <div className="flex flex-col lg:flex-row border border-border-line rounded-xl overflow-hidden bg-bg-surface min-h-[460px]">
           
           {/* Left Panel: File Tree (35% - Hidden on mobile, shown on desktop) */}
           <div 
             className="hidden lg:flex lg:w-[35%] p-6 flex-col justify-start text-left bg-bg-surface select-none border-r border-border-line"
             style={{ fontFamily: "'JetBrains Mono', monospace" }}
           >
-            <div className="text-xs text-text-muted mb-6 tracking-wider font-semibold">
-              stack/
+            <div className="text-xs text-text-muted mb-6 tracking-wider font-semibold flex items-center gap-2">
+              <FileCode2 size={14} className="text-[#E8792E]" />
+              <span>stack/</span>
             </div>
             
             <div className="space-y-3">
@@ -203,14 +182,14 @@ export default function Skills() {
                   <button
                     key={key}
                     onClick={() => setSelectedId(key)}
-                    className={`flex items-center gap-2 font-mono text-sm cursor-pointer w-full text-left py-1.5 px-3 transition-all border-l-2 focus-visible:ring-1 focus-visible:ring-accent-orange/50 outline-none rounded active:scale-[0.98] ${
+                    className={`flex items-center gap-2 font-mono text-xs cursor-pointer w-full text-left py-2 px-3 transition-all border-l-2 outline-none rounded active:scale-[0.98] ${
                       isActive
-                        ? "border-accent-orange text-accent-orange bg-accent-orange/5"
-                        : "border-transparent text-text-primary hover:text-accent-orange"
+                        ? "border-[#E8792E] text-[#E8792E] bg-[#E8792E]/10 font-semibold"
+                        : "border-transparent text-[#A79C8E] hover:text-[#F4EDE3] hover:bg-[#171512]"
                     }`}
                     style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   >
-                    <span>▸</span>
+                    <span className="text-[#E8792E]">{isActive ? "➔" : "📄"}</span>
                     <span>{file.name}</span>
                   </button>
                 );
@@ -218,8 +197,8 @@ export default function Skills() {
             </div>
             
             <div className="mt-auto pt-8 border-t border-border-line/30">
-              <p className="font-mono text-[9px] text-text-faint leading-relaxed">
-                Click on the json files to compile and inspect the core proficiencies and active roadmap of the developer.
+              <p className="font-mono text-[10px] text-[#A79C8E] leading-relaxed">
+                Inspect structured JSON manifests detailing competencies across Agentic AI, Core Languages, Web Frameworks, and Cloud Infrastructure.
               </p>
             </div>
           </div>
@@ -238,12 +217,13 @@ export default function Skills() {
                   bash <span className="hidden sm:inline">// compiler_view</span>
                 </span>
               </div>
-              <span className="text-[9px] text-text-faint uppercase tracking-widest shrink-0">
-                Status: Compiled OK
+              <span className="text-[10px] text-emerald-400 uppercase tracking-widest shrink-0 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                STATUS: OK
               </span>
             </div>
 
-            {/* Mobile 2x2 grid tab bar (visible below lg screen size - no horizontal scroll) */}
+            {/* Mobile 2x2 grid tab bar */}
             <div className="grid grid-cols-2 lg:hidden gap-2 border-b border-border-line/30 pb-3 mb-4 select-none">
               {(Object.keys(SKILLS_DATA) as SkillCategory[]).map((key) => {
                 const file = SKILLS_DATA[key];
@@ -252,14 +232,13 @@ export default function Skills() {
                   <button
                     key={key}
                     onClick={() => setSelectedId(key)}
-                    className={`flex items-center justify-center gap-1.5 font-mono text-xs cursor-pointer py-2 px-3 border transition-all shrink-0 rounded active:scale-95 ${
+                    className={`flex items-center justify-center gap-1.5 font-mono text-[11px] cursor-pointer py-2 px-2.5 border transition-all shrink-0 rounded active:scale-95 ${
                       isActive
-                        ? "border-accent-orange text-accent-orange bg-accent-orange/5 font-semibold"
-                        : "border-border-line/40 text-text-muted hover:text-accent-orange"
+                        ? "border-[#E8792E] text-[#E8792E] bg-[#E8792E]/10 font-semibold"
+                        : "border-[#2A241D] text-[#A79C8E] hover:text-[#F4EDE3]"
                     }`}
                     style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   >
-                    <span>▸</span>
                     <span>{file.name}</span>
                   </button>
                 );
@@ -267,18 +246,19 @@ export default function Skills() {
             </div>
 
             {/* Simulated Command prompt line */}
-            <div className="text-xs text-text-muted mb-2 select-none">
-              $ cat stack/{SKILLS_DATA[selectedId].name}
+            <div className="text-xs text-[#A79C8E] mb-2 select-none flex items-center gap-2">
+              <span className="text-[#E8792E]">$</span>
+              <span>cat stack/{SKILLS_DATA[selectedId].name}</span>
             </div>
 
             {/* Compiled JSON output console */}
-            <pre className="text-[11px] sm:text-xs text-text-primary whitespace-pre-wrap font-mono leading-relaxed bg-bg-base/40 p-4 rounded border border-border-line/35 flex-1 min-h-[320px] overflow-x-auto">
+            <pre className="text-[11px] sm:text-xs text-[#F4EDE3] whitespace-pre-wrap font-mono leading-relaxed bg-[#0E0D0B] p-4 rounded border border-[#2A241D] flex-1 min-h-[300px] overflow-x-auto">
               {lines.map((line, i) => (
                 <div key={i} className="min-h-[1.2rem]">
-                  {renderLineWithColor(line)}
+                  <span className="text-[#F4EDE3]">{line}</span>
                 </div>
               ))}
-              {blink ? <span className="text-accent-orange">█</span> : <span className="opacity-0">█</span>}
+              {blink ? <span className="text-[#E8792E]">█</span> : <span className="opacity-0">█</span>}
             </pre>
           </div>
 

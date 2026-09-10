@@ -19,6 +19,7 @@ export type Project = {
     lessons: string;
     architectureDesc: string;
     diagramType: "social" | "homeease" | "zomato" | "generic";
+    steps?: string[];
   };
 };
 

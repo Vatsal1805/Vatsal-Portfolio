@@ -1,63 +1,49 @@
 "use client";
-import { AnimatePresence, motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { ROLES } from "../data/portfolioData";
+import { Download } from "lucide-react";
 
-export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { current: number } }) {
-  void speedRef;
+interface HeroProps {
+  ready?: boolean;
+  speedRef?: React.MutableRefObject<number>;
+}
+
+export default function Hero({ ready = true }: HeroProps) {
   const [roleIdx, setRoleIdx] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Mouse coordinate motion values (normalized from -0.5 to 0.5)
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // Cycle role titles every 2.8s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIdx((prev) => (prev + 1) % ROLES.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Smooth springs for fluid, liquid 3D tilt reaction
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 75, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 75, damping: 20 });
-
-  // Window-scroll linked vertical parallax translation
+  // Parallax Scroll Y translation mapping for 3D depth effect
   const { scrollY } = useScroll();
-  const rawParallaxY = useTransform(scrollY, [0, 800], [0, -120]);
-  const parallaxY = useSpring(rawParallaxY, { stiffness: 100, damping: 30 });
+  const parallaxY = useTransform(scrollY, [0, 600], [0, 120]);
 
-  useEffect(() => {
-    if (!ready) return;
-    const id = setInterval(() => setRoleIdx((i) => (i + 1) % ROLES.length), 2000);
-    return () => clearInterval(id);
-  }, [ready]);
+  // Spring physics for subtle card tilt following mouse movements
+  const springConfig = { damping: 25, stiffness: 150 };
+  const mouseX = useSpring(0, springConfig);
+  const mouseY = useSpring(0, springConfig);
 
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia("(pointer: coarse)").matches) return;
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]);
 
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      if (e.beta === null || e.gamma === null) return;
-      const pitch = Math.min(Math.max(e.beta - 45, -30), 30) / 30;
-      const roll = Math.min(Math.max(e.gamma, -30), 30) / 30;
-
-      // Update Hero tilt values
-      mouseX.set(roll * 0.3);
-      mouseY.set(pitch * 0.3);
-    };
-
-    window.addEventListener("deviceorientation", handleOrientation);
-    return () => window.removeEventListener("deviceorientation", handleOrientation);
-  }, [mouseX, mouseY]);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    // Calculate mouse position relative to center of Hero viewport
-    const xVal = (e.clientX - rect.left) / width - 0.5;
-    const yVal = (e.clientY - rect.top) / height - 0.5;
+    const xVal = (e.clientX - rect.left) / rect.width - 0.5;
+    const yVal = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(xVal);
     mouseY.set(yVal);
   };
 
   const handleMouseLeave = () => {
-    // Smoothly spring back to center when cursor exits viewport
     mouseX.set(0);
     mouseY.set(0);
   };
@@ -69,7 +55,7 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
     transition: { duration: 1.0, delay, ease: [0.22, 1, 0.36, 1] as const },
   });
 
-  // Premium horizontal-split slide-up mask animation variants
+  // Horizontal-split slide-up mask animation variants
   const splitLineVariants = {
     hidden: { y: "100%" },
     visible: (customDelay: number) => ({
@@ -95,16 +81,23 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
         style={{ perspective: 1000 }}
       >
         
-        {/* Background video restored */}
-        <video
-          src="/videos/Bg_Video.mp4"
-          poster="/images/vatsal.jpg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-45 pointer-events-none z-0"
-        />
+        {/* Background video loaded lazily only when preloader is finished */}
+        {ready ? (
+          <video
+            src="/videos/Bg_Video.mp4"
+            poster="/images/vatsal.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover opacity-45 pointer-events-none z-0"
+          />
+        ) : (
+          <div 
+            className="absolute inset-0 h-full w-full bg-cover bg-center opacity-45 pointer-events-none z-0"
+            style={{ backgroundImage: "url('/images/vatsal.jpg')" }}
+          />
+        )}
 
         {/* Ambient warm gradient overlay */}
         <div className="absolute inset-0 pointer-events-none z-0" style={{ background: "rgba(14, 13, 11, 0.4)" }} />
@@ -128,7 +121,7 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
             style={{ transform: "translateZ(20px)" }}
           >
             <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] mb-4 text-[#A79C8E] text-center">
-              Full-Stack Developer — Ahmedabad, IN
+              Full-Stack &amp; AI Engineer building LLM Systems &amp; Production Apps — Vadodara, IN
             </p>
           </motion.div>
           
@@ -201,7 +194,7 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
             style={{ transform: "translateZ(25px)" }}
           >
             <p className="mt-4 max-w-lg text-sm md:text-base font-light leading-relaxed text-[#A79C8E] text-center">
-              A developer who turns ideas into working systems, clean interfaces, and products that actually ship.
+              A developer who turns ideas into working systems, clean interfaces, and production products that ship.
             </p>
           </motion.div>
           
@@ -209,7 +202,7 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
           <motion.div 
             {...fadeUp(0.75)}
             style={{ transform: "translateZ(50px)" }}
-            className="mt-7 flex flex-wrap justify-center gap-3"
+            className="mt-7 flex flex-wrap justify-center items-center gap-3"
           >
             <button 
               onClick={() => document.getElementById("builder")?.scrollIntoView({ behavior: "smooth" })} 
@@ -218,10 +211,21 @@ export default function Hero({ ready, speedRef }: { ready: boolean; speedRef: { 
             >
               View My Profile
             </button>
+            <a
+              href="/resume.pdf"
+              download="Vatsal_Bhavsar_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-md border px-5 py-2.5 font-mono text-xs font-semibold transition-all cursor-pointer select-none hover:bg-[#E8792E]/10 flex items-center gap-2"
+              style={{ borderColor: "rgba(232, 121, 46, 0.5)", color: "#F4EDE3" }}
+            >
+              <Download className="w-3.5 h-3.5 text-[#E8792E]" />
+              <span>Download CV</span>
+            </a>
             <button 
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} 
               className="rounded-md border px-5 py-2.5 font-mono text-xs font-semibold transition-colors cursor-pointer select-none hover:bg-[#E8792E]/10" 
-              style={{ borderColor: "#E8792E", color: "#E8792E" }}
+              style={{ borderColor: "#2A241D", color: "#A79C8E" }}
             >
               Get In Touch
             </button>

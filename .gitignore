@@ -44,3 +44,7 @@ build/
 .env.test.local
 .env.production.local
 
+.agents
+.hallmark
+*.md
+

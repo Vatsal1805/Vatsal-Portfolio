@@ -1,3 +1,4 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
 "use client";
 import React from "react";
 import { Drawer } from "vaul";
@@ -152,150 +153,182 @@ export default function ProjectDrawer({ p, isOpen, onClose }: ProjectDrawerProps
     solution: "Technical solution description placeholder...",
     architectureDesc: "System design flow description placeholder...",
     lessons: "Core engineering take-aways and learnings placeholder...",
+    steps: [] as string[],
   };
 
   return (
     <Drawer.Root open={isOpen} onOpenChange={(open) => !open && onClose()} dismissible={false}>
       <Drawer.Portal>
         {/* Dark warm blur overlay */}
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />
-        <Drawer.Content className="fixed inset-0 z-50 flex h-full w-full flex-col bg-[#0E0D0B] text-[#F4EDE3] focus:outline-none">
-          
-          {/* Scrollable Container - added data-vaul-no-drag to prevent Vaul from hijacking touch scroll on mobile */}
+        {/* Dark warm blur overlay */}
+        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />
+        <Drawer.Content 
+          className="fixed inset-0 z-50 flex h-full w-full flex-col bg-[#0E0D0B] text-[#F4EDE3] focus:outline-none overflow-hidden"
+        >
+          {/* Scrollable Wrapper - prevents Vaul drag and binds scroll to container */}
           <div 
             data-vaul-no-drag 
-            className="flex-1 overflow-y-auto px-6 pb-12 pt-12 md:px-12 md:pt-16 touch-pan-y"
+            className="flex-1 overflow-y-auto touch-pan-y w-full h-full"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
-            
-            {/* Header info */}
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="font-mono text-xs uppercase tracking-widest" style={{ color: p.accent }}>
-                  {p.tag}
-                </span>
-                <Drawer.Title className="font-display mt-2 text-3xl font-bold md:text-4xl text-[#F4EDE3]">
-                  {p.title}
-                </Drawer.Title>
-              </div>
-              <button 
-                onClick={onClose}
-                className="rounded-full border border-[#2A241D] bg-[#171512] p-2 text-[#A79C8E] hover:text-[#F4EDE3] transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Main Content Sections */}
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="px-6 pb-12 pt-12 md:px-12 md:pt-16 w-full max-w-6xl mx-auto">
               
-              {/* Left Panel: Writeups */}
-              <div className="lg:col-span-7 space-y-6">
-                
+              {/* Header info */}
+              <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
-                    <Cpu size={14} /> The Problem
-                  </h4>
-                  <p className="text-sm leading-relaxed text-[#A79C8E]">
-                    {detailedWriteup.problem}
-                  </p>
+                  <span className="font-mono text-xs uppercase tracking-widest" style={{ color: p.accent }}>
+                    {p.tag}
+                  </span>
+                  <Drawer.Title className="font-display mt-2 text-3xl font-bold md:text-4xl text-[#F4EDE3]">
+                    {p.title}
+                  </Drawer.Title>
                 </div>
-
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
-                    <Server size={14} /> The Solution
-                  </h4>
-                  <p className="text-sm leading-relaxed text-[#A79C8E]">
-                    {detailedWriteup.solution}
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
-                    <Database size={14} /> Technical Lessons
-                  </h4>
-                  <p className="text-sm leading-relaxed text-[#A79C8E]">
-                    {detailedWriteup.lessons}
-                  </p>
-                </div>
-
-                {/* Tags */}
-                <div className="pt-4 border-t border-[#2A241D]">
-                  <p className="font-mono text-xs uppercase tracking-widest text-[#A79C8E] mb-3">
-                    Technologies Utilized
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.stack.map((s) => (
-                      <span 
-                        key={s} 
-                        className="rounded-full border border-[#2A241D] bg-[#171512] px-3 py-1 font-mono text-[11px] text-[#F4EDE3]"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Footer Action buttons inside drawer */}
-                <div className="pt-6 flex gap-4">
-                  {p.github && (
-                    <a 
-                      href={p.github} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="inline-flex items-center gap-2 rounded-md border border-[#2A241D] bg-[#171512] px-5 py-2.5 font-mono text-xs text-[#F4EDE3] hover:border-white/20 transition-all"
-                    >
-                      <Github size={14} /> View Codebase
-                    </a>
-                  )}
-                  {p.demo && (
-                    <a 
-                      href={p.demo} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-mono text-xs text-white hover:opacity-90 transition-all"
-                      style={{ background: p.accent }}
-                    >
-                      <ExternalLink size={14} /> Launch Live Application
-                    </a>
-                  )}
-                </div>
-
+                <button 
+                  onClick={onClose}
+                  className="rounded-full border border-[#2A241D] bg-[#171512] p-2 text-[#A79C8E] hover:text-[#F4EDE3] transition-colors"
+                >
+                  <X size={20} />
+                </button>
               </div>
 
-              {/* Right Panel: Architecture Diagrams & Quick Specs */}
-              <div className="lg:col-span-5 rounded-xl border border-[#2A241D] bg-[#171512]/50 p-6 space-y-6">
+              {/* Main Content Sections */}
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-[#F4EDE3] mb-4 text-center lg:text-left">
-                    System Architecture Diagram
-                  </h4>
-                  {diagram}
-                  <p className="font-mono text-[10px] text-[#A79C8E] text-center leading-relaxed mt-2">
-                    {detailedWriteup.architectureDesc}
-                  </p>
+                {/* Left Panel: Writeups */}
+                <div className="lg:col-span-7 space-y-6">
+                  
+                  <div>
+                    <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
+                      <Cpu size={14} /> The Problem
+                    </h4>
+                    <p className="text-sm leading-relaxed text-[#A79C8E]">
+                      {detailedWriteup.problem}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
+                      <Server size={14} /> The Solution
+                    </h4>
+                    <p className="text-sm leading-relaxed text-[#A79C8E]">
+                      {detailedWriteup.solution}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-mono text-xs uppercase tracking-widest text-[#E8792E] mb-2 flex items-center gap-2">
+                      <Database size={14} /> Technical Lessons
+                    </h4>
+                    <p className="text-sm leading-relaxed text-[#A79C8E] whitespace-pre-line">
+                      {detailedWriteup.lessons}
+                    </p>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="pt-4 border-t border-[#2A241D]">
+                    <p className="font-mono text-xs uppercase tracking-widest text-[#A79C8E] mb-3">
+                      Technologies Utilized
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {p.stack.map((s) => (
+                        <span 
+                          key={s} 
+                          className="rounded-full border border-[#2A241D] bg-[#171512] px-3 py-1 font-mono text-[11px] text-[#F4EDE3]"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer Action buttons inside drawer */}
+                  <div className="pt-6 flex gap-4">
+                    {p.github && (
+                      <a 
+                        href={p.github} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="inline-flex items-center gap-2 rounded-md border border-[#2A241D] bg-[#171512] px-5 py-2.5 font-mono text-xs text-[#F4EDE3] hover:border-white/20 transition-all"
+                      >
+                        <Github size={14} /> View Codebase
+                      </a>
+                    )}
+                    {p.demo && (
+                      <a 
+                        href={p.demo} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-mono text-xs text-white hover:opacity-90 transition-all"
+                        style={{ background: p.accent }}
+                      >
+                        <ExternalLink size={14} /> Launch Live Application
+                      </a>
+                    )}
+                  </div>
+
                 </div>
 
-                {/* Specs Box */}
-                <div className="border-t border-[#2A241D] pt-4 font-mono text-xs space-y-2.5">
-                  <div className="flex justify-between">
-                    <span className="text-[#A79C8E]">PROJECT TYPE:</span>
-                    <span className="text-[#F4EDE3]">Solo Engineering Build</span>
+                {/* Right Panel: Architecture Diagrams & Quick Specs */}
+                <div className="lg:col-span-5 rounded-xl border border-[#2A241D] bg-[#171512]/50 p-6 space-y-6">
+                  
+                  <div>
+                    <h4 className="font-mono text-xs uppercase tracking-widest text-[#F4EDE3] mb-4 text-center lg:text-left">
+                      System Architecture Diagram
+                    </h4>
+                    {diagram}
+                    <p className="font-mono text-[10px] text-[#A79C8E] text-center leading-relaxed mt-2">
+                      {detailedWriteup.architectureDesc}
+                    </p>
+
+                    {/* Dynamic system architecture step-by-step description lists */}
+                    {detailedWriteup.steps && (
+                      <div className="border-t border-[#2A241D] pt-4 mt-6">
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-[#F4EDE3] mb-3">
+                          Data Flow Steps
+                        </p>
+                        <ol className="list-decimal list-inside space-y-3 font-mono text-[9px] text-[#A79C8E] leading-relaxed">
+                          {detailedWriteup.steps.map((step, idx) => {
+                            const parts = step.split(":");
+                            if (parts.length > 1) {
+                              return (
+                                <li key={idx} className="pl-1 text-left align-top">
+                                  <span className="text-[#F4EDE3] font-semibold">{parts[0]}</span>:
+                                  <span>{parts.slice(1).join(":")}</span>
+                                </li>
+                              );
+                            }
+                            return (
+                              <li key={idx} className="pl-1 text-left align-top">
+                                {step}
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#A79C8E]">DEPLOYMENT:</span>
-                    <span className="text-[#F4EDE3]">Vercel Edge</span>
+
+                  {/* Specs Box */}
+                  <div className="border-t border-[#2A241D] pt-4 font-mono text-xs space-y-2.5">
+                    <div className="flex justify-between">
+                      <span className="text-[#A79C8E]">PROJECT TYPE:</span>
+                      <span className="text-[#F4EDE3]">Solo Engineering Build</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#A79C8E]">DEPLOYMENT:</span>
+                      <span className="text-[#F4EDE3]">Vercel Edge</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#A79C8E]">STATUS:</span>
+                      <span className="text-[#E8792E]">Production Ready</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#A79C8E]">STATUS:</span>
-                    <span className="text-[#E8792E]">Production Ready</span>
-                  </div>
+
                 </div>
 
               </div>
 
             </div>
-
           </div>
         </Drawer.Content>
       </Drawer.Portal>

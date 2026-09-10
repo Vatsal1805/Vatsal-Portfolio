@@ -7,7 +7,7 @@ export default function Preloader() {
   const [decodedText, setDecodedText] = useState("");
   const [progress, setProgress] = useState(0);
   const targetText = "[ VATSAL.DEV ]";
-  const chars = "!?&@#$%^*+=_-/\\<>[]{}";
+  const chars = "!?&@#$%^*+=_-/\<>[]{}";
 
   // Cipher decryption text effect
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Preloader() {
           .join("");
       });
 
-      iterations += 0.35; // Speed of decoding letters
+      iterations += 0.35;
       if (iterations >= targetText.length) {
         clearInterval(interval);
         setDecodedText(targetText);
@@ -39,7 +39,7 @@ export default function Preloader() {
   // Smooth loading progress bar (0% to 100% over 1.9s)
   useEffect(() => {
     const startTime = performance.now();
-    const duration = 1900; 
+    const duration = 1900;
     
     let frameId: number;
     const updateProgress = (now: number) => {
@@ -57,96 +57,85 @@ export default function Preloader() {
     };
   }, []);
 
-  // Symmetric hyper-speed star tunnel animation
+  // Sleek, ambient non-congested particle canvas (Subtle floating nodes instead of chaotic warp trails)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     let w = (canvas.width = window.innerWidth);
     let h = (canvas.height = window.innerHeight);
+
     const onResize = () => {
+      if (!canvas) return;
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     };
     window.addEventListener("resize", onResize);
 
-    // Dynamic sizing variables
-    const isMobile = window.innerWidth < 768;
-    const COUNT = isMobile ? 85 : 180;
-    const maxDim = Math.max(w, h); // Symmetrical bounds prevent mobile squeezing
+    const isMobile = w < 768;
+    // Ultra-clean particle count (16 on mobile, 35 on desktop) to eliminate congestion
+    const COUNT = isMobile ? 16 : 35;
 
-    type Star = { x: number; y: number; z: number; pz: number; speed: number };
-    const stars: Star[] = Array.from({ length: COUNT }, () => ({
-      x: (Math.random() - 0.5) * maxDim,
-      y: (Math.random() - 0.5) * maxDim,
-      z: Math.random() * maxDim,
-      pz: 0,
-      speed: 0.7 + Math.random() * 1.5,
+    type Particle = {
+      x: number;
+      y: number;
+      radius: number;
+      alpha: number;
+      vx: number;
+      vy: number;
+      pulseSpeed: number;
+    };
+
+    const particles: Particle[] = Array.from({ length: COUNT }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      radius: Math.random() * 1.8 + 0.8,
+      alpha: Math.random() * 0.4 + 0.1,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      pulseSpeed: Math.random() * 0.02 + 0.005,
     }));
 
-    const start = performance.now();
-    let raf = 0;
-    const starColor = "#D89A3A"; // Soft gold
-    const trailColor = "rgba(232, 121, 46, 0.4)"; // Faint warm orange
+    let rafId = 0;
 
-    const render = (now: number) => {
-      const t = (now - start) / 1000;
-      // High initial warp speed, easing down smoothly
-      const mult = t < 1.3 ? 12 : Math.max(2, 12 - (t - 1.3) * 11);
-      
-      ctx.fillStyle = "rgba(10,10,15,0.3)";
+    const render = () => {
+      ctx.clearRect(0, 0, w, h);
+
+      // Soft ambient center glow
+      const gradient = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.6);
+      gradient.addColorStop(0, "rgba(232, 121, 46, 0.06)");
+      gradient.addColorStop(1, "rgba(14, 13, 11, 0)");
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, w, h);
-      
-      const cx = w / 2;
-      const cy = h / 2;
 
-      for (const s of stars) {
-        s.pz = s.z;
-        s.z -= s.speed * mult * 4.5;
-        if (s.z < 1) {
-          s.x = (Math.random() - 0.5) * maxDim;
-          s.y = (Math.random() - 0.5) * maxDim;
-          s.z = maxDim;
-          s.pz = s.z;
-        }
+      // Render floating subtle amber particles
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
 
-        // Project coordinate math symmetrically relative to maxDim bounds
-        const sx = (s.x / s.z) * maxDim + cx;
-        const sy = (s.y / s.z) * maxDim + cy;
-        const px = (s.x / s.pz) * maxDim + cx;
-        const py = (s.y / s.pz) * maxDim + cy;
-        const r = Math.max(0.4, (1 - s.z / maxDim) * 2.2);
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
 
-        // Draw trail lines
-        ctx.strokeStyle = trailColor;
-        ctx.lineWidth = r * 0.75;
-        ctx.globalAlpha = 0.8;
+        p.alpha += Math.sin(performance.now() * p.pulseSpeed) * 0.002;
+        const clampedAlpha = Math.max(0.08, Math.min(0.5, p.alpha));
+
         ctx.beginPath();
-        ctx.moveTo(px, py);
-        ctx.lineTo(sx, sy);
-        ctx.stroke();
-
-        // Render low-cost glow core (double-fill is battery friendly)
-        ctx.globalAlpha = 0.12;
-        ctx.fillStyle = starColor;
-        ctx.beginPath();
-        ctx.arc(sx, sy, r * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = starColor;
-        ctx.beginPath();
-        ctx.arc(sx, sy, r * 1.3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(216, 154, 58, ${clampedAlpha})`;
         ctx.fill();
       }
 
-      ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     };
-    raf = requestAnimationFrame(render);
+
+    render();
 
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
     };
   }, []);
@@ -156,13 +145,22 @@ export default function Preloader() {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-0 z-[100] overflow-hidden"
+      className="fixed inset-0 z-[100] overflow-hidden flex flex-col justify-between p-8 md:p-12"
       style={{ background: "#0E0D0B" }}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full pointer-events-none" />
+
+      {/* Top Header Tag */}
+      <div className="relative z-10 flex items-center justify-between pointer-events-none font-mono text-[10px] uppercase tracking-[0.2em] text-[#A79C8E]">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E8792E] animate-pulse" />
+          <span>VATSAL BHAVSAR // PORTFOLIO</span>
+        </div>
+        <span>SYSTEM_BOOT</span>
+      </div>
       
       {/* Centered Monogram & Dynamic Status Text */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[1]">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center pointer-events-none my-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -173,7 +171,7 @@ export default function Preloader() {
           }}
           className="font-mono font-bold select-none tracking-[0.1em] text-center"
           style={{
-            fontSize: "clamp(24px, 5vw, 48px)",
+            fontSize: "clamp(26px, 6vw, 54px)",
             color: "var(--color-accent-orange)",
             fontFamily: "var(--font-mono), monospace"
           }}
@@ -187,8 +185,7 @@ export default function Preloader() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 0.7, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="font-mono text-[10px] uppercase tracking-[0.25em] mt-6 text-center px-6 max-w-md"
-          style={{ color: "var(--color-text-muted)" }}
+          className="font-mono text-[10px] md:text-xs uppercase tracking-[0.25em] mt-6 text-center px-4 max-w-md text-[#A79C8E]"
         >
           {progress < 30 
             ? "PROMPTING AI TO DO MY JOB..." 
@@ -203,12 +200,9 @@ export default function Preloader() {
       </div>
 
       {/* Loading Progress Bar Container at the bottom */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-20 z-10 pointer-events-none">
-        <div 
-          className="flex justify-between w-64 mb-2 font-mono text-[10px] tracking-[0.2em]"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          <span>SYSTEM_INIT</span>
+      <div className="relative z-10 flex flex-col items-center justify-end pointer-events-none max-w-xs mx-auto w-full">
+        <div className="flex justify-between w-full mb-2 font-mono text-[10px] tracking-[0.2em] text-[#A79C8E]">
+          <span>LOADING_CORE</span>
           <span style={{ color: "var(--color-accent-orange)" }}>
             {Math.floor(progress).toString().padStart(3, "0")}%
           </span>
@@ -216,7 +210,7 @@ export default function Preloader() {
         
         {/* Loading Bar Track */}
         <div 
-          className="w-64 h-[2px] relative overflow-hidden rounded-full"
+          className="w-full h-[2px] relative overflow-hidden rounded-full"
           style={{ backgroundColor: "var(--color-border-line)" }}
         >
           {/* Progress Indicator */}
@@ -225,7 +219,7 @@ export default function Preloader() {
             style={{ 
               width: `${progress}%`,
               background: "linear-gradient(90deg, var(--color-accent-orange) 0%, var(--color-accent-amber) 100%)",
-              boxShadow: "0 0 6px rgba(232, 121, 46, 0.4)"
+              boxShadow: "0 0 8px rgba(232, 121, 46, 0.5)"
             }}
           />
         </div>

@@ -1,8 +1,8 @@
-/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 */
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { experienceItems } from "../data/portfolioData";
+import { MapPin } from "lucide-react";
 
 export default function Internship() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -24,13 +24,13 @@ export default function Internship() {
     >
       <div className="mx-auto max-w-6xl">
         <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: "var(--color-text-muted)" }}>
-          CH.03 — THE PROOF
+          CH.03 // THE PROOF
         </p>
         
         {/* Timeline grid container */}
         <div className="relative mt-16 grid grid-cols-1 md:grid-cols-[120px_1fr] gap-8">
           
-          {/* Mobile vertical line tracker (Spans full height of the cards layout) */}
+          {/* Mobile vertical line tracker */}
           <div className="absolute left-[8px] top-6 bottom-6 w-3 md:hidden pointer-events-none z-0">
             <svg className="w-full h-full" viewBox="0 0 12 100" preserveAspectRatio="none" fill="none">
               <path
@@ -50,17 +50,15 @@ export default function Internship() {
             </svg>
           </div>
 
-          {/* Desktop Curved Liquid-Glass Pipeline (Grounded Full-Height grid item) */}
+          {/* Desktop Curved Liquid-Glass Pipeline */}
           <div className="hidden md:block w-[120px] h-full min-h-[500px] pointer-events-none z-0">
             <svg className="w-full h-full" viewBox="0 0 120 600" preserveAspectRatio="none" fill="none">
-              {/* Background tracking guide */}
               <path
                 d="M60 0 C 20 150, 100 250, 60 350 C 20 450, 100 550, 60 600"
                 stroke="var(--color-border-line)"
                 strokeWidth="2"
                 strokeLinecap="round"
               />
-              {/* Liquid glowing progress line */}
               <motion.path
                 d="M60 0 C 20 150, 100 250, 60 350 C 20 450, 100 550, 60 600"
                 stroke="var(--color-accent-orange)"
@@ -72,7 +70,7 @@ export default function Internship() {
             </svg>
           </div>
 
-          {/* Experience Cards (Stays strictly in Column 2 on desktop) */}
+          {/* Experience Cards */}
           <div className="space-y-12 pl-8 md:pl-0 z-10">
             {experienceItems.map((it, i) => (
               <motion.div
@@ -81,25 +79,33 @@ export default function Internship() {
                 whileInView={{ opacity: 1, filter: "blur(0px)", borderColor: "var(--color-accent-orange)" }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-                className="rounded-xl border p-6 bg-[var(--color-bg-surface)]/30 transition-[background-color] duration-500 hover:bg-[var(--color-bg-surface)]/60"
-                style={{ borderWidth: "1px", borderStyle: "solid", willChange: "transform, opacity, filter" }}
+                className="rounded-xl border p-6 md:p-8 bg-[#171512]/60 transition-all duration-300 hover:bg-[#171512]"
+                style={{ borderColor: "#2A241D" }}
                 whileHover={{ 
                   borderColor: "var(--color-accent-orange)", 
-                  boxShadow: "0 0 15px rgba(232, 121, 46, 0.15)" 
+                  boxShadow: "0 0 20px rgba(232, 121, 46, 0.15)" 
                 }}
               >
                 {/* Header Row: Company name and Dates */}
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-                  <h3 className="font-display text-2xl md:text-3xl font-semibold" style={{ color: "var(--color-text-primary)" }}>
-                    {it.company}
-                  </h3>
-                  <span className="font-mono text-xs uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h3 className="font-display text-2xl md:text-3xl font-semibold text-[#F4EDE3]">
+                      {it.company}
+                    </h3>
+                    {it.location && (
+                      <span className="inline-flex items-center gap-1 font-mono text-[11px] px-2.5 py-0.5 rounded border bg-[#0E0D0B] border-[#2A241D] text-[#A79C8E]">
+                        <MapPin className="w-3 h-3 text-[#E8792E]" />
+                        <span>{it.location}</span>
+                      </span>
+                    )}
+                  </div>
+                  <span className="font-mono text-xs uppercase tracking-wider text-[#A79C8E]">
                     {it.dates}
                   </span>
                 </div>
 
                 {/* Sub-header: Role */}
-                <p className="font-mono text-xs uppercase tracking-widest mt-1.5" style={{ color: "var(--color-accent-orange)" }}>
+                <p className="font-mono text-xs uppercase tracking-widest mt-2 text-[#E8792E] font-semibold">
                   {it.role}
                 </p>
                 
@@ -108,8 +114,8 @@ export default function Internship() {
                     {it.tags.map((t) => (
                       <span 
                         key={t} 
-                        className="rounded-full border px-3 py-1 font-mono text-[10px] select-none" 
-                        style={{ borderColor: "var(--color-accent-orange)", color: "var(--color-accent-orange)" }}
+                        className="rounded-full border px-3 py-1 font-mono text-[10px] select-none bg-[#0E0D0B]" 
+                        style={{ borderColor: "rgba(232, 121, 46, 0.4)", color: "var(--color-accent-orange)" }}
                       >
                         {t}
                       </span>
@@ -118,10 +124,10 @@ export default function Internship() {
                 )}
                 
                 {it.points.length > 0 && (
-                  <ul className="mt-4 space-y-2 text-sm" style={{ color: "var(--color-text-muted)" }}>
+                  <ul className="mt-5 space-y-2.5 text-sm text-[#A79C8E] leading-relaxed">
                     {it.points.map((p) => (
-                      <li key={p} className="flex gap-2">
-                        <span style={{ color: "var(--color-accent-orange)" }}>—</span>
+                      <li key={p} className="flex items-start gap-2.5">
+                        <span className="text-[#E8792E] mt-0.5 select-none">▸</span>
                         <span>{p}</span>
                       </li>
                     ))}

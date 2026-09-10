@@ -1,20 +1,35 @@
 "use client";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import vatsalPhoto from "@/assets/vatsal.jpg";
 import { stack } from "../data/portfolioData";
 
-const bioText = "Final-year Computer Science Engineering student at Parul University. I specialize in building, deploying, and optimizing robust full-stack applications. Completed a production-focused internship at PTN Events, delivering clean code and user dashboard architecture in fast-paced sprint cycles. Currently mapping out a structured learning trajectory toward AI Engineering.";
-const bioWords = bioText.split(" ");
+const biographyText =
+  "Full-stack developer (MERN) moving into AI engineering. Shipped three production apps solo, plus four months at PTN Events building CRM features in sprint cycles. Currently building LLM engineering skills: frontier model APIs, tool calling, LangChain, MCP, and agent architectures. Hold the Oracle Agentic AI Foundations Associate and AWS Certified AI Practitioner certifications.";
+
+const bioWords = biographyText.split(" ");
 
 const containerVariants = {
-  hidden: { opacity: 1 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.05,
+      staggerChildren: 0.05,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const wordVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
@@ -22,51 +37,39 @@ const containerVariants = {
 const titleLineVariants = {
   hidden: { y: "100%", opacity: 0 },
   visible: {
-    y: 0,
+    y: "0%",
     opacity: 1,
     transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
 
 const paragraphVariants = {
-  hidden: { opacity: 1 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
       staggerChildren: 0.02,
-      delayChildren: 0.05,
-    },
-  },
-};
-
-const wordVariants = {
-  hidden: { opacity: 0, y: 3 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.35,
-      ease: "easeOut" as const,
-    },
-  },
-};
-
-const stackContainerVariants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.09,
       delayChildren: 0.1,
     },
   },
 };
 
+const stackContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.04,
+      delayChildren: 0.3,
+    },
+  },
+};
+
 const tagVariants = {
-  hidden: { opacity: 0, scale: 0.85, y: 8 },
+  hidden: { opacity: 0, scale: 0.9, y: 10 },
   visible: {
     opacity: 1,
     scale: 1,
@@ -99,7 +102,7 @@ export default function Builder() {
       className="relative w-full overflow-hidden px-6 py-24 md:py-36"
       style={{ background: "transparent" }}
     >
-      {/* Background Parallax Grid Schematic (Z-Layer 1: Slow Parallax + Ambient Spin) */}
+      {/* Background Parallax Grid Schematic */}
       <motion.div 
         style={{ y: yBg, opacity: 0.04 }}
         animate={{ rotate: 360 }}
@@ -120,7 +123,7 @@ export default function Builder() {
           className="font-mono text-xs uppercase tracking-[0.2em] mb-12 md:mb-16"
           style={{ color: "#A79C8E" }}
         >
-          CH.01 — THE BUILDER
+          CH.01 // THE BUILDER
         </p>
 
         {/* Editorial Grid Layout */}
@@ -140,7 +143,7 @@ export default function Builder() {
                 boxShadow: "0 20px 50px rgba(232, 121, 46, 0.15)",
               }}
             >
-              {/* Halftone / Subtle Warm Grain Filter overlay */}
+              {/* Halftone Overlay */}
               <div 
                 className="absolute inset-0 z-10 pointer-events-none opacity-20 mix-blend-color-dodge transition-opacity group-hover:opacity-10" 
                 style={{
@@ -148,7 +151,6 @@ export default function Builder() {
                   backgroundSize: "4px 4px",
                 }}
               />
-              {/* Subtle dark gradient overlay */}
               <div 
                 className="absolute inset-0 z-10 bg-gradient-to-t from-[#0E0D0B]/80 via-transparent to-transparent pointer-events-none" 
               />
@@ -162,7 +164,7 @@ export default function Builder() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
               />
 
-              {/* Editorial Vertical Label Overlay */}
+              {/* Label Overlay */}
               <div className="absolute right-4 bottom-4 z-20 font-mono text-[10px] uppercase tracking-widest text-[#A79C8E] bg-[#171512]/90 border border-[#2A241D] px-2 py-1 rounded">
                 VB // CSE 2026
               </div>
@@ -196,7 +198,7 @@ export default function Builder() {
                     variants={titleLineVariants}
                     style={{ fontSize: "clamp(38px, 6vw, 80px)", color: "#E8792E" }}
                   >
-                    ENGINEER
+                    &amp; AI ENGINEER
                   </motion.div>
                 </div>
                 <div className="overflow-hidden py-1">
@@ -205,7 +207,7 @@ export default function Builder() {
                     style={{ color: "#A79C8E" }}
                     className="font-mono text-sm sm:text-base md:text-lg mt-3 uppercase tracking-widest"
                   >
-                    MERN · GenAI · Systems
+                    MERN • Agentic AI • LLM Systems
                   </motion.div>
                 </div>
               </motion.div>

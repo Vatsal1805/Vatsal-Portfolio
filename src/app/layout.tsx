@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "../styles.css";
 
 export const metadata: Metadata = {
-  title: "Vatsal Bhavsar — Full-Stack Developer",
-  description: "CSE Graduate & Full-Stack Developer specializing in MERN stack and GenAI. Based in Ahmedabad.",
+  title: "Vatsal Bhavsar — Full-Stack Developer building toward AI Engineering",
+  description: "CSE Graduate & Full-Stack Developer building toward AI Engineering, specializing in the MERN stack, Google Gemini API, and Agentic workflows. Based in Ahmedabad.",
   openGraph: {
-    title: "Vatsal Bhavsar — Full-Stack Developer",
-    description: "CSE Graduate & Full-Stack Developer specializing in MERN stack and GenAI. Based in Ahmedabad.",
+    title: "Vatsal Bhavsar — Full-Stack Developer building toward AI Engineering",
+    description: "CSE Graduate & Full-Stack Developer building toward AI Engineering, specializing in the MERN stack, Google Gemini API, and Agentic workflows. Based in Ahmedabad.",
     type: "website",
   },
 };

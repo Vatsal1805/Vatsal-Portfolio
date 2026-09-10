@@ -7,7 +7,7 @@ type LogEntry = {
   type: "input" | "output" | "error";
 };
 
-const COMMAND_LIST = ["help", "about", "skills", "projects", "contact", "download-resume", "theme", "hack", "secret", "clear", "exit"];
+const COMMAND_LIST = ["help", "about", "skills", "certs", "projects", "contact", "download-resume", "theme", "hack", "secret", "clear", "exit"];
 
 export default function TerminalWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,116 +71,122 @@ export default function TerminalWidget() {
         outputs = [
           { text: "Available commands:", type: "output" },
           { text: "  about            - Summary of who I am", type: "output" },
+          { text: "  certs            - Verified AI certifications & badges", type: "output" },
           { text: "  skills           - Current technical expertise", type: "output" },
           { text: "  projects         - Built & shipped applications", type: "output" },
           { text: "  contact          - Channels to reach out", type: "output" },
           { text: "  download-resume  - Trigger PDF download", type: "output" },
           { text: "  theme <color>    - Swap accents (orange, green, blue)", type: "output" },
           { text: "  hack             - Execute matrix bypass sequence", type: "output" },
-          { text: "  secret           - Decrypt hidden case study", type: "output" },
-          { text: "  clear            - Wipe output history", type: "output" },
-          { text: "  exit             - Close terminal window", type: "output" },
+          { text: "  clear            - Wipe terminal buffer", type: "output" },
+          { text: "  exit             - Close terminal overlay", type: "output" },
         ];
         break;
+
       case "about":
         outputs = [
-          { text: "Vatsal Bhavsar — CSE Graduate (May 2026)", type: "output" },
-          { text: "A product-minded Full-Stack developer based in Ahmedabad, IN.", type: "output" },
-          { text: "Focused on building performant MERN systems and GenAI integrations.", type: "output" },
+          { text: "Vatsal Bhavsar | Full-Stack & AI Engineer", type: "output" },
+          { text: "B.Tech CSE student (CGPA: 7.76/10) at Parul University.", type: "output" },
+          { text: "Oracle Agentic AI Associate & AWS Certified AI Practitioner.", type: "output" },
+          { text: "Co-Founder at Converge Digitals | Ex-Software Dev Intern at PTN Events.", type: "output" },
+          { text: "Building LLM systems, Agentic workflows (MCP, LangChain), and production MERN apps.", type: "output" },
         ];
         break;
+
+      case "certs":
+      case "certifications":
+        outputs = [
+          { text: "VERIFIED AI CERTIFICATIONS:", type: "output" },
+          { text: "  [1] Oracle Agentic AI Foundations Associate (2026)", type: "output" },
+          { text: "      - Agent architecture, LangChain, MCP, OCI Agent deployment", type: "output" },
+          { text: "  [2] AWS Certified AI Practitioner AIF-C01 (2026)", type: "output" },
+          { text: "      - Foundation Models, Amazon Bedrock, SageMaker ML, RAG, Prompt Engineering", type: "output" },
+          { text: "Scroll to the Certifications section on the page to verify live badge links.", type: "output" },
+        ];
+        break;
+
       case "skills":
         outputs = [
-          { text: "Languages:  [██████████░░] JS (ES6+), C++, Python, SQL", type: "output" },
-          { text: "Frontend:   [███████████░] React, Tailwind, Next.js, MUI", type: "output" },
-          { text: "Backend:    [█████████░░░] Node.js, Express, REST APIs, JWT", type: "output" },
-          { text: "Databases:  [██████████░░] MongoDB, MySQL, Redis", type: "output" },
-          { text: "AI Toolkit: [████████░░░░] LangChain, LangGraph, Gemini API", type: "output" },
+          { text: "CORE TECHNICAL INVENTORY:", type: "output" },
+          { text: "  AI & LLM:      LangChain, Gemini API, Hugging Face, MCP, Tool-Calling, RAG", type: "output" },
+          { text: "  Languages:     JavaScript (ES6+), Python, TypeScript, C++, SQL", type: "output" },
+          { text: "  Frameworks:    React.js, Next.js, Node.js, Express.js, Gradio, Tailwind CSS", type: "output" },
+          { text: "  Databases:     MongoDB, MongoDB Atlas, MySQL, ImageKit CDN", type: "output" },
+          { text: "  Backend/Cloud: REST APIs, JWT, RBAC, AWS, OCI, Vercel, Git", type: "output" },
         ];
         break;
+
       case "projects":
         outputs = [
-          { text: "1. Social Media Content Analyzer (React, Node, Gemini, Tesseract.js)", type: "output" },
-          { text: "   AI-driven dashboard with image/PDF OCR parsing & sentiment vectors.", type: "output" },
-          { text: "2. HomeEase Marketplace (React, Node, Express, MongoDB, JWT)", type: "output" },
-          { text: "   Multi-role on-demand booking flows with secure permission guards.", type: "output" },
-          { text: "3. Zomato-Reel Video Platform (React, Node, Multer, ImageKit.io)", type: "output" },
-          { text: "   Media ingestion pipeline resolving device-specific buffering delays.", type: "output" },
+          { text: "FEATURED PRODUCTION BUILDS:", type: "output" },
+          { text: "  1. Social Media Content Analyzer (React, Node, Gemini AI, Tesseract.js OCR)", type: "output" },
+          { text: "  2. HomeEase — Home Services Marketplace (MERN, JWT, Location/Pincode Filters)", type: "output" },
+          { text: "  3. Zomato-Reel Video Platform (React 19, Express 5, ImageKit CDN, Multer RAM stream)", type: "output" },
         ];
         break;
+
       case "contact":
         outputs = [
-          { text: "Mail:     vatsalbhavsar2011@gmail.com", type: "output" },
-          { text: "LinkedIn: linkedin.com/in/vatsal-bhavsar", type: "output" },
-          { text: "GitHub:   github.com/Vatsal1805", type: "output" },
+          { text: "COMMUNICATION CHANNELS:", type: "output" },
+          { text: "  Email:    vatsalbhavsar2011@gmail.com", type: "output" },
+          { text: "  LinkedIn: linkedin.com/in/vatsal-bhavsar-3b30092a7/", type: "output" },
+          { text: "  GitHub:   github.com/Vatsal1805", type: "output" },
         ];
         break;
+
       case "download-resume":
-        outputs = [{ text: "Initializing resume PDF retrieval...", type: "output" }];
-        setTimeout(() => {
-          window.open("https://github.com/Vatsal1805", "_blank");
-        }, 800);
+        outputs = [
+          { text: "Downloading Vatsal_Bhavsar_Resume.pdf...", type: "output" },
+        ];
+        window.open("/resume.pdf", "_blank");
         break;
+
       case "theme":
-        if (arg === "green" || arg === "cyberpunk") {
-          setAccentColor("#10B981");
-          document.documentElement.style.setProperty("--color-accent-orange", "#10B981");
-          outputs = [{ text: "Theme changed to Cyberpunk Green.", type: "output" }];
-        } else if (arg === "blue" || arg === "cobalt") {
-          setAccentColor("#3B82F6");
-          document.documentElement.style.setProperty("--color-accent-orange", "#3B82F6");
-          outputs = [{ text: "Theme changed to Cobalt Blue.", type: "output" }];
-        } else if (arg === "orange" || arg === "amber") {
+        if (arg === "orange" || arg === "default") {
           setAccentColor("#E8792E");
-          document.documentElement.style.setProperty("--color-accent-orange", "#E8792E");
-          outputs = [{ text: "Theme changed to Amber Orange.", type: "output" }];
+          outputs = [{ text: "Accent color updated to Burnt Orange (#E8792E).", type: "output" }];
+        } else if (arg === "green" || arg === "matrix") {
+          setAccentColor("#10B981");
+          outputs = [{ text: "Accent color updated to Matrix Green (#10B981).", type: "output" }];
+        } else if (arg === "blue" || arg === "cyber") {
+          setAccentColor("#3B82F6");
+          outputs = [{ text: "Accent color updated to Cyber Blue (#3B82F6).", type: "output" }];
         } else {
           outputs = [
-            { text: "Available themes: orange, green, blue.", type: "output" },
             { text: "Usage: theme <color>", type: "output" },
+            { text: "Available themes: orange, green, blue", type: "output" }
           ];
         }
         break;
+
       case "hack":
-        outputs = [{ text: "Initializing matrix bypass sequence...", type: "output" }];
-        const hackSteps = [
-          "Establishing proxy nodes [OK]",
-          "Bypassing security firewall [OK]",
-          "Injecting custom WASM payload [OK]",
-          "01001000 01000011 01000011 01001011 01000101 01000100",
-          "SYSTEM COMPROMISED. Welcome to vatsal@root.",
-          "Type 'secret' to read the hidden files."
+        outputs = [
+          { text: "[!] INITIATING AGENTIC MATRIX BYPASS...", type: "error" },
+          { text: "[>] Connecting to OCI & AWS Bedrock Endpoints...", type: "output" },
+          { text: "[>] Injecting LangChain Tool-Calling Agents...", type: "output" },
+          { text: "[>] Access Granted: You are now interacting with Vatsal's system.", type: "output" },
         ];
-        hackSteps.forEach((step, idx) => {
-          setTimeout(() => {
-            setHistory((prev) => [...prev, { text: step, type: idx === 3 ? "error" : "output" }]);
-          }, (idx + 1) * 350);
-        });
         break;
+
       case "secret":
         outputs = [
-          { text: "🔐 ACCESSING VAULT ARCHIVE...", type: "output" },
-          { text: "PROJECT CODENAME: XENON", type: "output" },
-          { text: "PURPOSE: Decentralized Peer-to-Peer Audio Synchronization", type: "output" },
-          { text: "TECH STACK: Rust, WebRTC, WASM, React, Web Audio API", type: "output" },
-          { text: "DESCRIPTION:", type: "output" },
-          { text: "  Developed a custom WebRTC synchronization engine ensuring", type: "output" },
-          { text: "  sub-5ms delay between audio streams playing across up to", type: "output" },
-          { text: "  32 nodes concurrently. Written in Rust, compiled to WASM.", type: "output" },
-          { text: "STATUS: Shipped (Private Repository)", type: "output" },
+          { text: "Easter egg found: 99.9% of bugs were fixed by prompt engineering.", type: "output" },
         ];
         break;
+
       case "clear":
         setHistory([]);
         setInputVal("");
         return;
+
       case "exit":
         setIsOpen(false);
         setInputVal("");
         return;
+
       default:
         outputs = [
-          { text: `bash: command not found: ${trimmed}. Type 'help' for assistance.`, type: "error" },
+          { text: `Command not recognized: '${trimmed}'. Type 'help' for options.`, type: "error" },
         ];
         break;
     }
@@ -194,130 +200,112 @@ export default function TerminalWidget() {
       handleCommand(inputVal);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      if (cmdHistory.length === 0) return;
-      const nextIndex = historyIndex + 1;
-      if (nextIndex < cmdHistory.length) {
-        setHistoryIndex(nextIndex);
-        setInputVal(cmdHistory[nextIndex]);
+      if (cmdHistory.length > 0) {
+        const nextIndex = historyIndex + 1;
+        if (nextIndex < cmdHistory.length) {
+          setHistoryIndex(nextIndex);
+          setInputVal(cmdHistory[nextIndex]);
+        }
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      const nextIndex = historyIndex - 1;
-      if (nextIndex >= 0) {
+      if (historyIndex > 0) {
+        const nextIndex = historyIndex - 1;
         setHistoryIndex(nextIndex);
         setInputVal(cmdHistory[nextIndex]);
-      } else {
+      } else if (historyIndex === 0) {
         setHistoryIndex(-1);
         setInputVal("");
       }
     }
   };
 
-  const shadowColor =
-    accentColor === "#E8792E"
-      ? "rgba(232,121,46,0.3)"
-      : accentColor === "#10B981"
-      ? "rgba(16,185,129,0.3)"
-      : "rgba(59,130,246,0.3)";
-
   return (
     <>
-      {/* Floating Action Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer select-none"
-        style={{
-          background: "#171512",
-          borderColor: isOpen ? accentColor : "#2A241D",
-          boxShadow: isOpen
-            ? `0 0 20px ${shadowColor}`
-            : "0 10px 30px rgba(0,0,0,0.6)",
-        }}
-        aria-label="Toggle CLI terminal"
-      >
-        {isOpen ? (
-          <X className="h-5 w-5" style={{ color: accentColor }} />
-        ) : (
-          <Terminal className="h-5 w-5" style={{ color: "#F4EDE3" }} />
-        )}
-      </button>
+      {/* Floating CLI Launch Button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full border shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer font-mono text-xs"
+          style={{
+            background: "#171512",
+            borderColor: accentColor,
+            color: "#F4EDE3",
+            boxShadow: `0 4px 20px ${accentColor}25`,
+          }}
+        >
+          <Terminal size={15} style={{ color: accentColor }} />
+          <span>vatsal@terminal:~$</span>
+        </button>
+      )}
 
-      {/* Terminal Window Overlay */}
+      {/* Terminal Overlay Box */}
       {isOpen && (
         <div
           ref={containerRef}
           onClick={handleTerminalClick}
-          className="fixed bottom-22 right-6 z-40 flex w-[90vw] sm:w-[400px] h-[340px] flex-col rounded-xl border overflow-hidden shadow-2xl transition-all font-mono text-xs"
+          className="fixed bottom-6 right-6 z-50 w-[90vw] sm:w-[460px] h-[380px] rounded-xl border flex flex-col overflow-hidden shadow-2xl transition-all"
           style={{
             background: "#0E0D0B",
             borderColor: "#2A241D",
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.7)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
           }}
         >
-          {/* Title bar */}
+          {/* Header Bar */}
           <div
-            className="flex items-center justify-between border-b px-4 py-2"
+            className="px-4 py-3 border-b flex items-center justify-between select-none"
             style={{ background: "#171512", borderColor: "#2A241D" }}
           >
-            <div className="flex items-center gap-1.5">
-              <div className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-              <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-              <div className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
-              <span className="ml-2 text-[10px] text-[#A79C8E] uppercase tracking-wider font-semibold">
-                vatsal@terminal:~
+            <div className="flex items-center gap-2">
+              <Terminal size={14} style={{ color: accentColor }} />
+              <span className="font-mono text-xs font-semibold text-[#F4EDE3]">
+                vatsal@portfolio:~$
               </span>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
-              className="text-[#5C5147] hover:text-[#F4EDE3] transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              className="text-[#A79C8E] hover:text-[#F4EDE3] transition-colors cursor-pointer"
             >
-              <X size={14} />
+              <X size={16} />
             </button>
           </div>
 
-          {/* Console Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 select-text">
-            {history.map((h, i) => (
+          {/* Log Output Area */}
+          <div className="flex-1 p-4 font-mono text-xs overflow-y-auto space-y-2 leading-relaxed">
+            {history.map((entry, idx) => (
               <div
-                key={i}
-                className="leading-relaxed break-all whitespace-pre-wrap"
-                style={{
-                  color:
-                    h.type === "input"
-                      ? "#F4EDE3"
-                      : h.type === "error"
-                      ? "#ea580c"
-                      : h.text.includes("SYSTEM COMPROMISED") || h.text.includes("Theme changed")
-                      ? accentColor
-                      : "#A79C8E",
-                }}
+                key={idx}
+                className={
+                  entry.type === "input"
+                    ? "text-[#F4EDE3] font-semibold"
+                    : entry.type === "error"
+                    ? "text-red-400"
+                    : "text-[#A79C8E]"
+                }
               >
-                {h.text}
+                {entry.text}
               </div>
             ))}
             <div ref={bottomRef} />
           </div>
 
-          {/* Command Input Area */}
+          {/* Command Prompt Input Bar */}
           <div
-            className="flex items-center border-t px-4 py-2 gap-1"
+            className="p-3 border-t flex items-center gap-2"
             style={{ background: "#171512", borderColor: "#2A241D" }}
           >
-            <ChevronRight className="h-4.5 w-4.5" style={{ color: accentColor }} />
-            <span style={{ color: accentColor }} className="mr-1">
-              $
-            </span>
+            <ChevronRight size={14} style={{ color: accentColor }} />
             <input
               ref={inputRef}
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent text-[#F4EDE3] focus:outline-none"
-              style={{ caretColor: accentColor }}
-              placeholder="type commands..."
-              autoComplete="off"
-              autoCapitalize="off"
+              placeholder="type 'help'..."
+              className="flex-1 bg-transparent font-mono text-xs text-[#F4EDE3] outline-none placeholder-[#A79C8E]/50"
             />
           </div>
         </div>
